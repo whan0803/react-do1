@@ -4,6 +4,9 @@ background: linear-gradient(to bottom, #7FB6F9 0%, #FFFFFF 30%);
     height: 100vh;
     margin: 0 auto;
     position: relative;
+          box-shadow: 
+    10px 0 20px rgba(0,0,0,0.15),
+   -10px 0 20px rgba(0,0,0,0.15);
 }
 
 .mainCharactor {

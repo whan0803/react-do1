@@ -8,8 +8,11 @@
     align-items: center;
     gap: 30px;
     padding-top: 100px;
-    
+          box-shadow: 
+    10px 0 20px rgba(0,0,0,0.15),
+   -10px 0 20px rgba(0,0,0,0.15);
 }
+
 
 .img {
     width: 400px;

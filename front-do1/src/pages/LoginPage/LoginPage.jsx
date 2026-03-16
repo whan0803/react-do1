@@ -4,7 +4,7 @@ import LoginForm from "./LoginForm/LoginForm"
 
 const LoginPage = () => {
     return(
-        <div>
+        <div className={style.LoginPage}>
             <LoginForm />
         </div>
     )
