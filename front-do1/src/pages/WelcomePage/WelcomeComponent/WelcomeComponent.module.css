@@ -1,0 +1,32 @@
+.WelcomeComponent {
+background: linear-gradient(to bottom, #7FB6F9 0%, #FFFFFF 30%);
+    width: 527px;
+    height: 100vh;
+    margin: 0 auto;
+    position: relative;
+}
+
+.mainCharactor {
+    width: 527px;
+    height: 480px;
+}
+
+.Wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    margin-top: -100px; 
+
+}
+
+.button {
+    width: 408px;
+    height: 75px;
+    border-radius: 20px;
+    background-color: rgba(58, 133, 232, 0.7);
+    border: none;
+    font-size: 25px;
+    color: white;
+    cursor:  pointer;
+}

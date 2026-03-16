@@ -2,7 +2,8 @@ create table users(
     user_id serial primary key,
     user_name varchar(255) not null,
     user_email varchar(300) not null,
-    user_password varchar(200) not null
+    user_password varchar(200) not null,
+    user_birth varchar(10) not null
 )
 
 select * from users;

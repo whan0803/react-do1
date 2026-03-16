@@ -1,0 +1,58 @@
+.LoginForm {
+    width: 527px;
+    height: 100vh;
+    margin: 0 auto;
+    background: linear-gradient(to bottom, #7FB6F9 0%, #FFFFFF 30%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding-top: 100px;
+    
+}
+
+.img {
+    width: 400px;
+    margin-bottom: 0;
+    margin-top: auto;
+    
+}
+
+.loginTitle {
+    font-size: 35px;
+    color: #1F4E8B;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+     margin-top: 40px;
+}
+
+.inputWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.inputWrapper > input {
+    width: 437px;
+    height: 58px;
+    border-radius: 30px;
+    background-color: #E7EBEF;
+    border: none;
+    color: black;
+    padding-left: 10px;
+    font-size: 20px;
+}
+.button {
+    width: 437px;
+    height: 58px;
+    border-radius: 30px;
+    border: none;
+    background-color: rgba(58, 133, 232, 0.7);
+    font-size: 25px;
+    color: white;
+    cursor: pointer;
+}
