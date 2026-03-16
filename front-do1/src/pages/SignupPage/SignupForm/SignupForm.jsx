@@ -4,6 +4,7 @@ import leftCharactor from '../../../assets/left.png'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSignup } from '../../../hooks/useSignup';
+import { useSignupStore } from '../../../store/useSignupStore';
 
 
 const SignupForm = () => {
@@ -15,12 +16,7 @@ const SignupForm = () => {
         const [month, setMonth] = useState(1);
         const [day, setDay] = useState(1);
 
-        const [signupForm, setSignupForm] = useState({
-            user_name: "",
-            user_email: "",
-            user_password: "",
-        })
-
+  const { signupForm, setSignupForm } = useSignupStore();
 
     const years = Array.from({ length: 40 }, (_, i) => currentYear - i);
     const months = Array.from({length: 12}, (_, i) => i + 1);
@@ -30,10 +26,7 @@ const SignupForm = () => {
 
     const onChangeSignup = (e) => {
         const { name, value } = e.target;
-
-        setSignupForm({...signupForm,
-            [name]: value
-        })
+        setSignupForm(name, value)
     }
 
     const signupMutation = useSignup();

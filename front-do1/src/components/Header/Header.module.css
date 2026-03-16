@@ -1,0 +1,13 @@
+.Header {
+    width: 527px;
+    height: 95px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px 0 20px;
+    align-items: center;
+}
+
+.logo {
+    width: 114px;
+    height: 60px;
+}

@@ -1,0 +1,9 @@
+.Nav {
+    width: 527px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px 0 20px;
+    color: #0A3A79;
+    align-items: center;
+}
