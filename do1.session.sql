@@ -8,6 +8,7 @@ create table users(
 
 select * from users;
 drop table mission_record;
+drop table mission_table;
 drop table users;
 
 create table mission_table(
@@ -27,3 +28,7 @@ create table mission_record(
 )
 
 select * from mission_record;
+
+insert all
+into mission_table values(1, '물 500ml 마시기', false)
+select * from dual;

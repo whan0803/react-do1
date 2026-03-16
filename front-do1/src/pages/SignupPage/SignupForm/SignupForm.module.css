@@ -1,0 +1,80 @@
+.SignupForm {
+    width: 527px;
+    height: 100vh;
+    background: linear-gradient(to bottom, #7FB6F9 0%, #FFFFFF 30%);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+.SignupTitle {
+    font-size: 35px;
+    color: #1F4E8B;
+}
+
+.inputWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.inputWrapper > input {
+    width: 411px;
+    height: 55px;
+    border: none;
+    border-radius: 30px;
+    background-color: #E7EBEF;
+    padding-left: 10px;
+    color: black;
+    font-size: 15px;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.selectWrapper {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.button {
+    width: 411px;
+    height: 72px;
+    border: none;
+    border-radius: 30px;
+    color: white;
+    font-size: 25px;
+    background-color: rgba(58, 133, 232, 0.7);
+}
+
+.selectWrapper > select {
+    width: 121px;
+    height: 30px;
+    border-radius: 30px;
+    border: none;
+    background-color: #E7EBEF;
+}
+
+
+.imgWrapper {
+    display: flex;
+    align-items: end;
+}
+
+.imgWrapper > img:nth-child(2) {
+    height: 100px;
+}
+
+.imgWrapper > img:nth-child(3) {
+    height: 100px;
+}
+
+.imgWrapper > img:nth-child(4) {
+    height: 100px;
+}
