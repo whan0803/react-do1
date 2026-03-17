@@ -21,7 +21,7 @@ exports.createUser = async (req, res) => {
 
 exports.loginUser = async(req, res) => {
     try {
-        const {user_email, user_password} = req.body;
+        const { user_email, user_password } = req.body;
 
         const result = await pool.query(`select * from users where user_email = $1`,[user_email]);
 
@@ -44,6 +44,6 @@ exports.loginUser = async(req, res) => {
         })
     }catch(err) {
         console.error(err);
-        res.send(500).json({message: "서버오류"})
+        res.status(500).json({message: "서버오류"})
     }
 }

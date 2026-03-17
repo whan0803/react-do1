@@ -13,48 +13,10 @@
     margin: 0 auto;
 }
 
-.characterBox {
-  position: relative;
-  width: fit-content;
-  margin: 0 auto;
-
-}
-.characterBox img {
-    display: block;
-    height: 380px;
-}
-
 .main {
-  flex: 1;
+    flex: 1;
   position: relative;
     display: flex;
   flex-direction: column;
   justify-content: flex-end;
-}
-
-
-.bubble {
-  position: absolute;
-  top: -110px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  background: #4A90E2;
-  color: white;
-  padding: 50px 20px;
-  border-radius: 30px;
-  width: 300px;
-  text-align: center;
-}
-
-.bubble::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  border-width: 10px 10px 0 10px;
-  border-style: solid;
-  border-color: #4A90E2 transparent transparent transparent;
 }

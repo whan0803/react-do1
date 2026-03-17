@@ -1,0 +1,38 @@
+.characterBox {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+
+}
+.characterBox img {
+    display: block;
+    height: 380px;
+}
+
+
+
+.bubble {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #4A90E2;
+  color: white;
+  padding: 30px 20px;
+  border-radius: 30px;
+  width: 300px;
+  text-align: center;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  border-width: 10px 10px 0 10px;
+  border-style: solid;
+  border-color: #4A90E2 transparent transparent transparent;
+}

@@ -21,5 +21,5 @@ export const useSignupStore = create((set) => ({
         user_email: "",
         user_password: "",
       },
-    }),
+    }), 
 }));
