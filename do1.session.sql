@@ -12,10 +12,11 @@ drop table mission_table;
 drop table users;
 
 create table mission_table(
-    mission_id int primary key,
-    mission_content varchar(700),
-    is_active boolean default true
+    mission_id serial primary key,
+    mission_content varchar(700)
 )
+
+
 
 create table mission_record(
     record_id int primary key,
@@ -29,6 +30,33 @@ create table mission_record(
 
 select * from mission_record;
 
-insert all
-into mission_table values(1, '물 500ml 마시기', false)
-select * from dual;
+
+INSERT INTO mission_table (mission_content) VALUES
+('창문 열고 3분 환기하기'),
+('물 한 컵 마시기'),
+('방에서 쓰레기 3개 버리기'),
+('스트레칭 5분 하기'),
+('오늘 할 일 3개 적기'),
+('감사한 일 1개 생각하기'),
+('휴대폰 없이 5분 쉬기'),
+('가족이나 친구에게 안부 메시지 보내기'),
+('책 5페이지 읽기'),
+('산책 10분 하기'),
+('책상 위 정리하기'),
+('새로운 노래 1곡 들어보기'),
+('거울 보면서 미소 짓기'),
+('오늘 찍은 사진 1장 남기기'),
+('영어 단어 3개 외우기'),
+('누군가에게 칭찬 한마디 하기'),
+('잠들기 전 스트레칭 3분'),
+('오늘 목표 하나 완료'),
+('음악 들으며 눈 감고 3분 쉬기'),
+('내일 할 일 미리 하나 정하기'),
+('운동 5분하기'),
+('자신의 장점 3가지 노트의 적기'),
+('부모님과 5분동안 전화하기'),
+('방청소 하기'),
+('거울 보면서 미소 짓기'),
+('오늘 있었던 일 한 줄 기록하기');
+
+select * from mission_table;

@@ -1,0 +1,226 @@
+.GetMission {
+    width: 527px;
+    height: 100vh;
+    box-shadow: 
+    10px 0 20px rgba(0,0,0,0.15),
+    -10px 0 20px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+
+    margin: 0 auto;
+}
+.Main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+}
+
+.Mission {
+    width: 480px;
+    height: 55px;
+    border-radius: 30px;
+    background-color: antiquewhite;
+}
+.MissionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.ButtonWrapper {
+    display: flex;
+    gap: 70px;
+}
+
+.ButtonWrapper > button {
+    width: 200px;
+    height: 55px;
+    background-color: blue;
+    border-radius: 30px;
+    border: none;
+    font-size: 20px;
+    color: white;
+}
+.ButtonWrapper > button:nth-child(2) {
+    width: 200px;
+    height: 55px;
+    background-color: rgb(255, 0, 0);
+    border-radius: 30px;
+    border: none;
+}
+
+.MissionImg {
+    width: 300px;
+    margin: 0 auto;
+}
+
+.ModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999;
+}
+
+/* 공통 오버레이 */
+.ModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0,0,0,0.4);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999;
+}
+
+/* ================= 성공 모달 ================= */
+
+.SuccessModal {
+    width: 500px;
+    height: 250px;
+
+    background: linear-gradient(135deg, #7FB6F9, #5A8EDC);
+    border-radius: 30px;
+
+    position: relative;
+    padding: 30px;
+    color: white;
+}
+
+/* 돌아가기 */
+.BackBtn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* 중앙 텍스트 */
+.SuccessText {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 28px;
+    text-align: center;
+}
+
+/* 성공 버튼 */
+.SuccessBtn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+
+    background: #E5E5E5;
+    border: none;
+    border-radius: 20px;
+
+    padding: 10px 25px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+
+/* ================= 실패 모달 ================= */
+
+.FailModal {
+    width: 500px;
+    padding: 30px;
+
+    background: #AFC1D6;
+    border-radius: 30px;
+
+    position: relative;
+}
+
+/* 감정 이미지 자리 */
+.FaceWrapper {
+    width: 100%;
+    height: 80px;
+    background: #E5E5E5;
+    border-radius: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    margin-top: 50px;
+}
+
+/* 이유 텍스트 */
+.Label {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #1F4E8B;
+}
+
+/* 입력창 */
+.Input {
+    width: 100%;
+    height: 60px;
+
+    margin-top: 10px;
+    padding: 10px;
+
+    border-radius: 20px;
+    border: none;
+    outline: none;
+
+    font-size: 16px;
+}
+
+/* 실패 버튼 */
+.FailBtn {
+    margin-top: 20px;
+    float: right;
+
+    background: #F06A6A;
+    border: none;
+    border-radius: 30px;
+
+    padding: 12px 30px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+}
+
+.Emotion {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* 선택된 이모지 */
+.ActiveEmotion {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+
+    transform: scale(1.2);
+    border: 3px solid #1F4E8B;
+    border-radius: 50%;
+    background: white;
+}

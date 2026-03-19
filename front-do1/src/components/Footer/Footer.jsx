@@ -1,7 +1,7 @@
 import style from './Footer.module.css'
 
 import home from '../../assets/home.png'
-import list from '../../assets/profile.png'
+import list from '../../assets/list.png'
 import calender from '../../assets/calendar.png'
 
 const Footer = () => {

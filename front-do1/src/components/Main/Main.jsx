@@ -15,7 +15,7 @@ const Main = () => {
         const isLast = index === message.length -1;
 
         if (isLast) {
-          navigate("/");
+          navigate("/missionpage");
         } else {
           nextMessage();
         }

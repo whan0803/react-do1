@@ -1,0 +1,98 @@
+.ListPageComponent {
+        width: 527px;
+    height: 100vh;
+    min-height: 100vh;
+    
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+
+        box-shadow: 
+        10px 0 20px rgba(0,0,0,0.1),
+        -10px 0 20px rgba(0,0,0,0.1);
+        overflow: hidden;
+}
+
+/* 가운데 카드 */
+.Main {
+ /* 이건 유지 (디자인 그대로) */
+
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+        min-height: 0;
+
+}
+
+/* 리스트 영역 */
+.ItemWrapper {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+
+        scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE */
+}
+
+/* 하단 버튼 영역 */
+.Main > div:last-child {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+/* 버튼 */
+.Main button {
+    width: 140px;
+    height: 45px;
+    border-radius: 25px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 성공 버튼 */
+.Main button:first-child {
+    background-color: #4EA8FF;
+    color: white;
+}
+
+/* 실패 버튼 */
+.Main button:last-child {
+    background-color: #FF6B6B;
+    color: white;
+}
+
+/* 리스트 아이템 */
+.ListItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 20px;
+    border-bottom: 2px solid #E3EAF5;
+}
+
+.ListItem p {
+    font-size: 16px;
+    color: #333;
+}
+
+.Success {
+    background-color: #4EA8FF;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 13px;
+}
+
+.Fail {
+    background-color: #FF6B6B;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 13px;
+}
