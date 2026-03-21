@@ -9,6 +9,8 @@ import SignupPage from './pages/SignupPage/SignupPage';
 import MainPage from './pages/MainPage/MainPage';
 import MissionPage from './pages/MissionPage/MissionPage';
 import ListPage from './pages/ListPage/ListPage';
+import CalenderPage from './pages/CalenderPage/CalenderPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 
 import { useEffect } from 'react';
@@ -42,9 +44,10 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/mainpage" element={<MainPage />} />
-              <Route path="/mainpage" element={<MainPage />} />
               <Route path="/missionpage" element={<MissionPage />} />
               <Route path="/listpage" element={<ListPage />} />
+              <Route path="/calenderpage" element={<CalenderPage />} />
+              <Route path="/profilepage" element={<ProfilePage />} />
             </Routes>
           </BrowserRouter>
         {/* </TimeStart> */}

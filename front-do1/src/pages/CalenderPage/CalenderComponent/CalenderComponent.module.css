@@ -1,0 +1,119 @@
+.wrapper {
+  width: 527px;
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+          box-shadow: 
+        10px 0 20px rgba(0,0,0,0.1),
+        -10px 0 20px rgba(0,0,0,0.1);
+}
+
+/* 메인 영역 */
+.Main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;           /* 캘린더랑 아래 카드 간격 */
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* 캘린더 */
+.calendar {
+  width: 100% !important;
+  height: 310px !important;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* 리스트 전체 */
+.listBox {
+  background: white;
+  border-radius: 15px;
+  padding: 10px 0;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.08);
+}
+
+/* 한 줄 */
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+}
+
+/* 마지막 줄 border 제거 */
+.listItem:last-child {
+  border-bottom: none;
+}
+
+/* 왼쪽 영역 */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 동그라미 포인트 */
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #4A90E2;
+  border-radius: 50%;
+}
+
+/* 텍스트 */
+.label {
+  font-size: 14px;
+  color: #333;
+}
+
+/* 값 */
+.value {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* ===== react-calendar 커스텀 ===== */
+
+.calendar :global(.react-calendar__tile) {
+  height: 35px;
+}
+
+.calendar :global(.react-calendar__tile--now) {
+  background: #7FB6F9;
+  color: white;
+  border-radius: 10px;
+}
+
+.calendar :global(.react-calendar__tile--active) {
+  background: #4A90E2;
+  color: white;
+  border-radius: 10px;
+}
+
+.calendar :global(.react-calendar__navigation) {
+  margin-bottom: 10px;
+}
+
+.calendar :global(.react-calendar__month-view__weekdays) {
+  text-align: center;
+  font-weight: bold;
+}
+
+.success {
+  background: #004ef5 !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+.fail {
+  background: #f44336 !important;
+  color: white !important;
+  border-radius: 50%;
+}

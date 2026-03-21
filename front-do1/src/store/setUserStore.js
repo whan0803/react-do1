@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const setUserStore = create((set =>({
+export const setUserStore = create((set) =>({
     user: null,
 
     setUser: (user) => {
@@ -20,4 +20,4 @@ export const setUserStore = create((set =>({
             set({user: null});
             localStorage.removeItem("user");
     }
-})))
+}))
