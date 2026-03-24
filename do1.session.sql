@@ -18,7 +18,7 @@ create table mission_table(
 
 select mission_content from mission_table order by 1 asc limit 1;
 
-
+drop table mission_record
 
 create table mission_record(
     record_id serial primary key,
@@ -28,7 +28,7 @@ create table mission_record(
     is_success boolean not null,
     failure_emotion varchar(100),
     failure_reason varchar(300),
-    unique(record_id, user_id)
+    unique(mission_id, user_id)
 )
 
 select * from mission_record;

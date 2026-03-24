@@ -5,6 +5,8 @@ export const setUserStore = create((set) =>({
 
     setUser: (user) => {
         localStorage.setItem("user", JSON.stringify(user));
+
+        localStorage.setItem("user_id", user.user_id);
         set({user});
     },
 
@@ -19,5 +21,6 @@ export const setUserStore = create((set) =>({
     logoutUser: () => {
             set({user: null});
             localStorage.removeItem("user");
+            localStorage.removeItem("user_id");
     }
 }))

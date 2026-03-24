@@ -18,7 +18,9 @@ export const useLogin = () => {
             const {initMessage} = userChatMessageStore.getState();
             alert("로그인이 완료되었습니다");
             resetLoginForm();
+
             setUser(res.data);
+            
             initMessage();
             navigate('/mainpage');
 

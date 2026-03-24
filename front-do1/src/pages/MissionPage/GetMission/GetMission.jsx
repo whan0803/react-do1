@@ -12,13 +12,19 @@ import emotion3 from '../../../assets/emotion3 2.png'
 import emotion4 from '../../../assets/emotion4 2.png'
 import emotion5 from '../../../assets/emotion5 2.png'
 
+import { useNavigate } from "react-router-dom";
+
 import { useModal } from "../../../store/useModal";
 
 import { useEffect } from "react";
 import { useGetMissionStore } from "../../../store/useMissionStore";
 import { useGetMission } from "../../../hooks/useGetMission";
+import { successMission } from "../../../api/getMission";
+import { failMission } from "../../../api/getMission";
 
 const GetMission = () => {
+  const navigate = useNavigate();
+
 const {
   selectedEmotion,
   setSelectedEmotion,
@@ -29,7 +35,7 @@ const {
 } = useModal();
 
 const { data, isLoading } = useGetMission();
-const { mission, setMission, setMissionId, setStatus } = useGetMissionStore();
+const { mission, setMission, setMissionId, setStatus, missionId } = useGetMissionStore();
 
   const closeModal = () => {
     setModalType(null);
@@ -41,13 +47,82 @@ const { mission, setMission, setMissionId, setStatus } = useGetMissionStore();
       setFailForm(name, value);
   }
 
-  useEffect(() => {
-    if (data) {
-      setMission(data.mission_content);
-      setMissionId(data.mission_id);
-      setStatus("in_progress");
+useEffect(() => {
+  const userId = localStorage.getItem("user_id");
+  const key = `mission_${userId}`;
+  const today = new Date().toISOString().slice(0, 10);
+
+  const saved = JSON.parse(localStorage.getItem(key));
+
+  if (saved && saved.date === today) {
+    setMission(saved.mission);
+    setMissionId(saved.missionId);
+    setStatus("in_progress");
+    return;
+  }
+
+
+  if (data) {
+    setMission(data.mission_content);
+    setMissionId(data.mission_id);
+    setStatus("in_progress");
+
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        mission: data.mission_content,
+        missionId: data.mission_id,
+        date: today,
+      }),
+    );
+  }
+}, [data, setMission, setMissionId, setStatus]);
+
+
+  const handleSuccess = async() => {
+    try {
+      const userId = localStorage.getItem("user_id");
+      localStorage.getItem("mission_null")
+      await successMission({
+        user_id: userId,
+        mission_id: missionId,
+      });
+      const key = localStorage.getItem(`mission_${userId}`);
+      localStorage.removeItem(key);
+      alert("미션을 성공했습니다")
+      setStatus("success");
+      setModalType(null);
+      navigate("/mainpage");
+    }catch(err) {
+      console.log(err);
     }
-  }, [data,setMission, setMissionId, setStatus]);
+  }
+
+  const handleFail = async() => {
+    try {
+          const userId = localStorage.getItem("user_id");
+
+    failMission({
+      user_id: userId,
+      mission_id: missionId,
+      failure_reason: failForm.failure_reason,
+      failure_emotion: selectedEmotion,
+    });
+    const key = localStorage.getItem(`mission_${userId}`);
+    localStorage.removeItem(key);
+    
+    alert("미션 등록 성공");
+    
+    setStatus("fail");
+    setModalType(null);
+    navigate("/mainpage");
+    }catch(err) {
+      console.error(err);
+      alert("미션등록을 실패");
+    }
+
+    
+  }
 
 
   return (
@@ -79,7 +154,7 @@ const { mission, setMission, setMissionId, setStatus } = useGetMissionStore();
 
             <div className={style.SuccessText}>진짜로 미션을 수행하셨나요?</div>
 
-            <button className={style.SuccessBtn}>성공</button>
+            <button className={style.SuccessBtn} onClick={handleSuccess}>성공</button>
           </div>
         </div>
       )}
@@ -159,7 +234,7 @@ const { mission, setMission, setMissionId, setStatus } = useGetMissionStore();
               value={failForm.failure_reason}
             />
 
-            <button className={style.FailBtn}>실패</button>
+            <button className={style.FailBtn} onClick={handleFail}>실패</button>
           </div>
         </div>
       )}
