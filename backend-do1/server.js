@@ -7,11 +7,11 @@ app.use(cors());
 app.use(express.json());
 
 const userRouter = require("./routers/userRouter");
-// const getMissionRouter = require("./routers/getMissionRouter");
+const getMissionRouter = require("./routers/getMissionRouter");
 
 
 app.use("/user", userRouter);
-// app.use("/getMission", getMissionRouter);
+app.use("/getMission", getMissionRouter); 
 
 app.listen(port, () => {
     console.log(`http://localhost:${port}`);

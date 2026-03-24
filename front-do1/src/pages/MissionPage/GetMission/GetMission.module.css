@@ -22,6 +22,9 @@
     height: 55px;
     border-radius: 30px;
     background-color: antiquewhite;
+    text-align: center;
+    line-height: 55px;
+    font-size: 20px;
 }
 .MissionWrapper {
     display: flex;

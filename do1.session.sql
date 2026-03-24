@@ -16,19 +16,23 @@ create table mission_table(
     mission_content varchar(700)
 )
 
+select mission_content from mission_table order by 1 asc limit 1;
+
 
 
 create table mission_record(
-    record_id int primary key,
+    record_id serial primary key,
     user_id int references users(user_id) not null,
     mission_id int references mission_table(mission_id) not null,
     record_date date not null,
     is_success boolean not null,
     failure_emotion varchar(100),
-    failure_reason varchar(300)
+    failure_reason varchar(300),
+    unique(record_id, user_id)
 )
 
 select * from mission_record;
+
 
 
 INSERT INTO mission_table (mission_content) VALUES

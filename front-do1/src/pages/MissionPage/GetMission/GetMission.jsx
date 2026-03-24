@@ -14,6 +14,10 @@ import emotion5 from '../../../assets/emotion5 2.png'
 
 import { useModal } from "../../../store/useModal";
 
+import { useEffect } from "react";
+import { useGetMissionStore } from "../../../store/useMissionStore";
+import { useGetMission } from "../../../hooks/useGetMission";
+
 const GetMission = () => {
 const {
   selectedEmotion,
@@ -23,6 +27,9 @@ const {
   modalType,
   setModalType,
 } = useModal();
+
+const { data, isLoading } = useGetMission();
+const { mission, setMission, setMissionId, setStatus } = useGetMissionStore();
 
   const closeModal = () => {
     setModalType(null);
@@ -34,6 +41,14 @@ const {
       setFailForm(name, value);
   }
 
+  useEffect(() => {
+    if (data) {
+      setMission(data.mission_content);
+      setMissionId(data.mission_id);
+      setStatus("in_progress");
+    }
+  }, [data,setMission, setMissionId, setStatus]);
+
 
   return (
     <div className={style.GetMission}>
@@ -41,7 +56,7 @@ const {
 
       <main className={style.Main}>
         <div className={style.MissionWrapper}>
-          <div className={style.Mission}></div>
+          <div className={style.Mission}>{isLoading ? "로딩중...": mission}</div> {/*미션 가져오는곳 */}
 
           <div className={style.ButtonWrapper}>
             <button onClick={() => setModalType("success")}>성공</button>

@@ -6,7 +6,6 @@ import { format } from "date-fns";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
-// ✅ 너가 만든 데이터 그대로 사용
 const missionRecord = [
   {
     id: 1,
@@ -38,7 +37,7 @@ const missionRecord = [
 ];
 
 const CalenderComponent = () => {
-  // ✅ 날짜별 클래스 적용 함수
+
   const getTileClass = ({ date, view }) => {
     if (view !== "month") return;
 
@@ -53,10 +52,10 @@ const CalenderComponent = () => {
     return record.is_success ? style.success : style.fail;
   };
 
-  // ✅ 총 성공 개수
+
   const successCount = missionRecord.filter((item) => item.is_success).length;
 
-  // ✅ 연속 성공 계산 (간단 버전)
+
   const sorted = [...missionRecord].sort(
     (a, b) => new Date(a.record_date) - new Date(b.record_date),
   );
