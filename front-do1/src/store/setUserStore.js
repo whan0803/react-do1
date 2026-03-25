@@ -4,14 +4,14 @@ export const setUserStore = create((set) =>({
     user: null,
 
     setUser: (user) => {
-        localStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("user", JSON.stringify(user));
 
-        localStorage.setItem("user_id", user.user_id);
+        sessionStorage.setItem("user_id", user.user_id);
         set({user});
     },
 
     loadUser: () => {
-        const storeUser = localStorage.getItem("user");
+        const storeUser = sessionStorage.getItem("user");
 
         if(storeUser) {
             set({user:JSON.parse(storeUser)})
@@ -20,7 +20,7 @@ export const setUserStore = create((set) =>({
 
     logoutUser: () => {
             set({user: null});
-            localStorage.removeItem("user");
-            localStorage.removeItem("user_id");
+            sessionStorage.removeItem("user");
+            sessionStorage.removeItem("user_id");
     }
 }))

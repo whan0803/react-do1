@@ -48,11 +48,11 @@ const { mission, setMission, setMissionId, setStatus, missionId } = useGetMissio
   }
 
 useEffect(() => {
-  const userId = localStorage.getItem("user_id");
+  const userId = sessionStorage.getItem("user_id"); // ← 변경
   const key = `mission_${userId}`;
   const today = new Date().toISOString().slice(0, 10);
 
-  const saved = JSON.parse(localStorage.getItem(key));
+  const saved = JSON.parse(sessionStorage.getItem(key)); // ← 변경
 
   if (saved && saved.date === today) {
     setMission(saved.mission);
@@ -61,13 +61,13 @@ useEffect(() => {
     return;
   }
 
-
   if (data) {
     setMission(data.mission_content);
     setMissionId(data.mission_id);
     setStatus("in_progress");
 
-    localStorage.setItem(
+    sessionStorage.setItem(
+      // ← 변경
       key,
       JSON.stringify({
         mission: data.mission_content,
@@ -78,51 +78,45 @@ useEffect(() => {
   }
 }, [data, setMission, setMissionId, setStatus]);
 
+const handleSuccess = async () => {
+  try {
+    const userId = sessionStorage.getItem("user_id"); // ← 변경
+    await successMission({ user_id: userId, mission_id: missionId });
 
-  const handleSuccess = async() => {
-    try {
-      const userId = localStorage.getItem("user_id");
-      localStorage.getItem("mission_null")
-      await successMission({
-        user_id: userId,
-        mission_id: missionId,
-      });
-      const key = localStorage.getItem(`mission_${userId}`);
-      localStorage.removeItem(key);
-      alert("미션을 성공했습니다")
-      setStatus("success");
-      setModalType(null);
-      navigate("/mainpage");
-    }catch(err) {
-      console.log(err);
-    }
+    const key = `mission_${userId}`;
+    sessionStorage.removeItem(key); // ← 변경
+
+    alert("미션을 성공했습니다");
+    setStatus("success");
+    setModalType(null);
+    navigate("/mainpage");
+  } catch (err) {
+    console.log(err);
   }
+};
 
-  const handleFail = async() => {
-    try {
-          const userId = localStorage.getItem("user_id");
-
+const handleFail = async () => {
+  try {
+    const userId = sessionStorage.getItem("user_id"); // ← 변경
     failMission({
       user_id: userId,
       mission_id: missionId,
       failure_reason: failForm.failure_reason,
       failure_emotion: selectedEmotion,
     });
-    const key = localStorage.getItem(`mission_${userId}`);
-    localStorage.removeItem(key);
-    
+
+    const key = `mission_${userId}`;
+    sessionStorage.removeItem(key); // ← 변경
+
     alert("미션 등록 성공");
-    
     setStatus("fail");
     setModalType(null);
     navigate("/mainpage");
-    }catch(err) {
-      console.error(err);
-      alert("미션등록을 실패");
-    }
-
-    
+  } catch (err) {
+    console.error(err);
+    alert("미션등록을 실패");
   }
+};
 
 
   return (

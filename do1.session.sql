@@ -64,3 +64,9 @@ INSERT INTO mission_table (mission_content) VALUES
 ('오늘 있었던 일 한 줄 기록하기');
 
 select * from mission_table;
+
+      SELECT mission_id, mission_content 
+      FROM mission_table, users
+        WHERE user_id = 1
+      ORDER BY random() 
+      LIMIT 1;

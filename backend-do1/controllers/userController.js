@@ -38,7 +38,6 @@ exports.loginUser = async(req, res) => {
         }
 
         res.json({
-            message: "로그인 성공",
             user_id: user.user_id,
             user_name: user.user_name
         })

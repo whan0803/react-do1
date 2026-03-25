@@ -2,12 +2,18 @@ const pool = require("../db/db")
 
 exports.getMission = async (req, res) => {
   try {
-    const result = await pool.query(`
-      select mission_id, mission_content 
-      from mission_table 
-      order by random() 
-      limit 1;
-    `);
+    const { user_id } = req.body;
+
+const result = await pool.query(
+  `
+      SELECT mission_id, mission_content 
+      FROM mission_table, users 
+        WHERE user_id = $1
+      ORDER BY random() 
+      LIMIT 1;
+    `,
+  [user_id],
+);
 
     const mission = result.rows[0];
 

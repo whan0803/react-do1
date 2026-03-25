@@ -5,7 +5,7 @@ const getMissionController = require("../controllers/getMissionController");
 const missionSuccessController = require("../controllers/missionSuccessController")
 const missionFailController = require("../controllers/missionFailController")
 
-router.get("/mission", getMissionController.getMission);
+router.post("/mission", getMissionController.getMission);
 router.post("/success", missionSuccessController.successMission)
 router.post("/fail", missionFailController.failMission)
 

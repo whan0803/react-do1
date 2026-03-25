@@ -16,12 +16,16 @@ export const useLogin = () => {
         onSuccess: (res) => {
             const { setUser } = setUserStore.getState();
             const {initMessage} = userChatMessageStore.getState();
-            alert("로그인이 완료되었습니다");
+            console.log("res:", res);
+            console.log("res.data:", res.data);
+
+
             resetLoginForm();
 
             setUser(res.data);
             
             initMessage();
+            alert("로그인이 완료되었습니다");
             navigate('/mainpage');
 
         },

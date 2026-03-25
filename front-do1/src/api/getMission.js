@@ -1,9 +1,12 @@
 import axios from "axios";
 
-export const getMission = async() => {
-    const res = await axios.get("http://localhost:3000/getMission/mission");
-    return res.data;
-}
+export const getMission = async () => {
+  const user_id = sessionStorage.getItem("user_id");
+  const res = await axios.post("http://localhost:3000/getMission/mission", {
+    user_id,
+  }); // ← 객체로 변경
+  return res.data;
+};
 
 export const successMission = async(data) => {
     const res = await axios.post("http://localhost:3000/getMission/success", data);
