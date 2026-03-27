@@ -3,40 +3,27 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { format } from "date-fns";
 
+import { useState, useEffect } from "react";
+
+import { getCalenderMission } from "../../../api/getCalenderMission";
+
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
-const missionRecord = [
-  {
-    id: 1,
-    user_id: 1,
-    mission_id: 1,
-    record_date: "2026-03-21",
-    is_success: true,
-    failure_emotion: "",
-    failure_reason: "",
-  },
-  {
-    id: 2,
-    user_id: 4,
-    mission_id: 3,
-    record_date: "2026-03-22",
-    is_success: false,
-    failure_emotion: "mad",
-    failure_reason: "스트레스를 받아 할 생각을 못함",
-  },
-  {
-    id: 3,
-    user_id: 4,
-    mission_id: 2,
-    record_date: "2026-03-23",
-    is_success: false,
-    failure_emotion: "normal",
-    failure_reason: "까먹음",
-  },
-];
 
 const CalenderComponent = () => {
+
+  const [missionRecord, setMissionRecord] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const result  = await getCalenderMission();
+      console.log(result);
+      setMissionRecord(result);
+    }
+    fetchData();
+  },[])
 
   const getTileClass = ({ date, view }) => {
     if (view !== "month") return;
@@ -44,7 +31,7 @@ const CalenderComponent = () => {
     const formattedDate = format(date, "yyyy-MM-dd");
 
     const record = missionRecord.find(
-      (item) => item.record_date === formattedDate,
+      (item) => item.to_char === formattedDate,
     );
 
     if (!record) return;

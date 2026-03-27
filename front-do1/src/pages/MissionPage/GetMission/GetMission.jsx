@@ -21,6 +21,9 @@ import { useGetMissionStore } from "../../../store/useMissionStore";
 import { useGetMission } from "../../../hooks/useGetMission";
 import { successMission } from "../../../api/getMission";
 import { failMission } from "../../../api/getMission";
+import { missionResultStore } from "../../../store/missionResultStore";
+
+
 
 const GetMission = () => {
   const navigate = useNavigate();
@@ -36,6 +39,7 @@ const {
 
 const { data, isLoading } = useGetMission();
 const { mission, setMission, setMissionId, setStatus, missionId } = useGetMissionStore();
+const {setMissionResult} = missionResultStore();
 
   const closeModal = () => {
     setModalType(null);
@@ -48,11 +52,11 @@ const { mission, setMission, setMissionId, setStatus, missionId } = useGetMissio
   }
 
 useEffect(() => {
-  const userId = sessionStorage.getItem("user_id"); // ← 변경
+  const userId = sessionStorage.getItem("user_id");
   const key = `mission_${userId}`;
   const today = new Date().toISOString().slice(0, 10);
 
-  const saved = JSON.parse(sessionStorage.getItem(key)); // ← 변경
+  const saved = JSON.parse(sessionStorage.getItem(key));
 
   if (saved && saved.date === today) {
     setMission(saved.mission);
@@ -80,16 +84,18 @@ useEffect(() => {
 
 const handleSuccess = async () => {
   try {
-    const userId = sessionStorage.getItem("user_id"); // ← 변경
+    const userId = sessionStorage.getItem("user_id");
     await successMission({ user_id: userId, mission_id: missionId });
 
     const key = `mission_${userId}`;
-    sessionStorage.removeItem(key); // ← 변경
-
+    sessionStorage.removeItem(key);
+    setMissionResult("success");
     alert("미션을 성공했습니다");
     setStatus("success");
     setModalType(null);
+
     navigate("/mainpage");
+
   } catch (err) {
     console.log(err);
   }
@@ -97,7 +103,7 @@ const handleSuccess = async () => {
 
 const handleFail = async () => {
   try {
-    const userId = sessionStorage.getItem("user_id"); // ← 변경
+    const userId = sessionStorage.getItem("user_id");
     failMission({
       user_id: userId,
       mission_id: missionId,
@@ -106,12 +112,14 @@ const handleFail = async () => {
     });
 
     const key = `mission_${userId}`;
-    sessionStorage.removeItem(key); // ← 변경
+    sessionStorage.removeItem(key);
 
+    setMissionResult("fail");
     alert("미션 등록 성공");
     setStatus("fail");
     setModalType(null);
     navigate("/mainpage");
+
   } catch (err) {
     console.error(err);
     alert("미션등록을 실패");
@@ -125,7 +133,7 @@ const handleFail = async () => {
 
       <main className={style.Main}>
         <div className={style.MissionWrapper}>
-          <div className={style.Mission}>{isLoading ? "로딩중...": mission}</div> {/*미션 가져오는곳 */}
+          <div className={style.Mission}>{isLoading ? "로딩중...": mission}</div> 
 
           <div className={style.ButtonWrapper}>
             <button onClick={() => setModalType("success")}>성공</button>

@@ -33,6 +33,17 @@ create table mission_record(
 
 select * from mission_record;
 
+select mission_content, is_success
+from mission_record, mission_table, users
+where user_id = 1
+
+SELECT mt.mission_content, mr.is_success
+FROM mission_record mr
+JOIN mission_table mt 
+  ON mr.mission_id = mt.mission_id
+WHERE mr.user_id = 1;
+
+
 
 
 INSERT INTO mission_table (mission_content) VALUES
