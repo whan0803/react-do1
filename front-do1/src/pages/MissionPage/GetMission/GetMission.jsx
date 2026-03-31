@@ -39,7 +39,7 @@ const {
 
 const { data, isLoading } = useGetMission();
 const { mission, setMission, setMissionId, setStatus, missionId } = useGetMissionStore();
-const {setMissionResult} = missionResultStore();
+const {setMissionResult, missionResult} = missionResultStore();
 
   const closeModal = () => {
     setModalType(null);
@@ -84,6 +84,11 @@ useEffect(() => {
 
 const handleSuccess = async () => {
   try {
+    if (missionResult === "fail" || missionResult === "success") {
+      alert("오늘의 미션을 완료했습니다");
+      return;
+    }
+
     const userId = sessionStorage.getItem("user_id");
     await successMission({ user_id: userId, mission_id: missionId });
 
@@ -103,7 +108,14 @@ const handleSuccess = async () => {
 
 const handleFail = async () => {
   try {
+    if(missionResult === "fail" || missionResult === "success") {
+      alert("오늘의 미션을 완료했습니다");
+      return;
+    }
+    
     const userId = sessionStorage.getItem("user_id");
+
+
     failMission({
       user_id: userId,
       mission_id: missionId,
@@ -126,6 +138,18 @@ const handleFail = async () => {
   }
 };
 
+let missionStatus;
+
+if (missionResult === "fail" || missionResult === "success") {
+  missionStatus = "오늘의 미션을 완료했습니다";
+} else if (isLoading) {
+  missionStatus = "...로딩중";
+} else {
+  missionStatus = mission;
+}
+
+
+
 
   return (
     <div className={style.GetMission}>
@@ -133,7 +157,7 @@ const handleFail = async () => {
 
       <main className={style.Main}>
         <div className={style.MissionWrapper}>
-          <div className={style.Mission}>{isLoading ? "로딩중...": mission}</div> 
+          <div className={style.Mission}>{missionStatus}</div> 
 
           <div className={style.ButtonWrapper}>
             <button onClick={() => setModalType("success")}>성공</button>

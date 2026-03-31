@@ -11,3 +11,9 @@
     width: 114px;
     height: 60px;
 }
+
+.userWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

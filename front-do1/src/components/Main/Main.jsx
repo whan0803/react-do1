@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import style from "./Main.module.css";
 import defaultChar from "../../assets/default.png";
 import { userChatMessageStore } from "../../store/userChatMessageStore";
@@ -12,7 +13,12 @@ const Main = () => {
   const navigate = useNavigate();
 
   const { message, index, nextMessage } = userChatMessageStore();
-  const { missionResult } = missionResultStore();
+  const { missionResult, loadMissionResult } = missionResultStore();
+
+  // 마운트 시 유저별 missionResult 불러오기
+  useEffect(() => {
+    loadMissionResult();
+  }, []);
 
   const getCharacter = () => {
     if (missionResult === "success") return successImg;
@@ -30,13 +36,11 @@ const Main = () => {
 
   const currentMessage = getMessage();
   const safeIndex = Math.min(index, currentMessage.length - 1);
+
   const handleClick = () => {
     const isLast = index === currentMessage.length - 1;
-
     if (isLast) {
-      if (missionResult === "success" || missionResult === "fail") {
-        return; 
-      }
+      if (missionResult === "success" || missionResult === "fail") return;
       navigate("/missionpage");
     } else {
       nextMessage();

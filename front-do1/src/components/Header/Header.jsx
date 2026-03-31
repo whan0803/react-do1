@@ -21,13 +21,15 @@ const Header = () => {
     }
 
 
-    return(
-        <div className={style.Header}>
-            <img className={style.logo} src={logo} alt="로고" />
-            <p onClick={goLogout}>로그아웃</p>
-            <img src={profile} onClick={goProfile} alt="프로필" />
+    return (
+      <div className={style.Header}>
+        <img className={style.logo} src={logo} alt="로고" />
+        <div className={style.userWrapper}>
+          <p onClick={goLogout}>로그아웃</p>
+          <img src={profile} onClick={goProfile} alt="프로필" />
         </div>
-    )
+      </div>
+    );
 }
 
 export default Header

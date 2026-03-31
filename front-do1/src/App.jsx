@@ -16,6 +16,8 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import { useEffect } from 'react';
 import { setUserStore } from './store/setUserStore';
 import { userChatMessageStore } from './store/userChatMessageStore';
+import { useGetMissionStore } from './store/useMissionStore';
+import { missionResultStore } from './store/missionResultStore';
 import TimeStart from './components/TimeStart/TimeStart';
 
 const queryClient = new QueryClient();
@@ -25,19 +27,24 @@ function App() {
 
 
   
-  useEffect(() => {
-    const {loadUser} = setUserStore.getState();
-    const { initMessage} = userChatMessageStore.getState();
-    loadUser();
-    initMessage();
-  }, []);
+useEffect(() => {
+  const { loadUser } = setUserStore.getState();
+  const { initMessage } = userChatMessageStore.getState();
+  const { loadUserState } = useGetMissionStore.getState();
+  const { loadMissionResult } = missionResultStore.getState();
+
+  loadUser();
+  initMessage();
+  loadUserState(); // ← 추가
+  loadMissionResult(); // ← 추가
+}, []);
 
 
 
   return (
     <div>
       <QueryClientProvider client={queryClient}>
-        {/* <TimeStart> */}
+        <TimeStart>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<WelcomePage />} />
@@ -50,7 +57,7 @@ function App() {
               <Route path="/profilepage" element={<ProfilePage />} />
             </Routes>
           </BrowserRouter>
-        {/* </TimeStart> */}
+        </TimeStart>
       </QueryClientProvider>
     </div>
   );
