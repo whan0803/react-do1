@@ -56,3 +56,24 @@ exports.getTodayMissionResult = async (req, res) => {
     res.status(500).json({ message: "서버오류" });
   }
 };
+
+exports.getMissionDayCount = async (req, res) => {
+  try {
+    const { user_id } = req.body;
+
+    const result = await pool.query(
+      `
+      SELECT COUNT(DISTINCT record_date)::int AS mission_days
+      FROM mission_record
+      WHERE user_id = $1;
+    `,
+      [user_id],
+    );
+
+    const mission_days = result.rows[0]?.mission_days ?? 0;
+    res.json({ mission_days });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "서버오류" });
+  }
+};

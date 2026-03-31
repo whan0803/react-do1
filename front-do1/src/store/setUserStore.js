@@ -20,7 +20,11 @@ export const setUserStore = create((set) => ({
   loadUser: () => {
     const storeUser = sessionStorage.getItem("user");
     if (storeUser) {
-      set({ user: JSON.parse(storeUser) });
+      const parsed = JSON.parse(storeUser);
+      set({ user: parsed });
+      if (parsed?.user_id != null) {
+        sessionStorage.setItem("user_id", String(parsed.user_id));
+      }
     }
   },
 

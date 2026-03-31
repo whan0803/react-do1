@@ -1,14 +1,13 @@
 import { create } from "zustand";
 import { getNextResetAt, isResetPassed } from "../utils/missionReset";
 import { getTodayMissionResult } from "../api/getMission";
-
-const getUserId = () => sessionStorage.getItem("user_id");
+import { getSessionUserId } from "../utils/sessionUser";
 
 export const missionResultStore = create((set) => ({
   missionResult: null,
 
   setMissionResult: (result) => {
-    const userId = getUserId();
+    const userId = getSessionUserId();
     if (userId) {
       if (result) {
         localStorage.setItem(`missionResult_${userId}`, result);
@@ -25,7 +24,7 @@ export const missionResultStore = create((set) => ({
   },
 
   loadMissionResult: async () => {
-    const userId = getUserId();
+    const userId = getSessionUserId();
     if (!userId) return;
 
     try {

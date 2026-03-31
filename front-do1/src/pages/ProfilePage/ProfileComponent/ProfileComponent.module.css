@@ -66,6 +66,23 @@ background: linear-gradient(to bottom, #7FB6F9 -10%, #FFFFFF 20%);
   background-color: #e6ebf2;
 }
 
+.birthSelect {
+  flex: 1;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background-color: #e6ebf2;
+  padding: 0 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.hint {
+  margin: 16px 0;
+  color: #4a6fa5;
+  font-size: 15px;
+}
+
 
 .divider {
   width: 100%;

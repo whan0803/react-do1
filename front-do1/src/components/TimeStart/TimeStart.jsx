@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useGetMissionStore } from "../../store/useMissionStore";
 import { missionResultStore } from "../../store/missionResultStore";
 import { getRemainingSeconds, getNextResetAt, isResetPassed } from "../../utils/missionReset";
+import { getSessionUserId } from "../../utils/sessionUser";
 
 const TimeStart = ({ children }) => {
   const { setRemainingTime, setDay, resetTimer, setNextResetAt } = useGetMissionStore();
@@ -25,7 +26,7 @@ const TimeStart = ({ children }) => {
         setDay((day) => day + 1);
         resetTimer();
         setMissionResult(null);
-        const userId = sessionStorage.getItem("user_id");
+        const userId = getSessionUserId();
         if (userId) sessionStorage.removeItem(`mission_${userId}`);
         return;
       }

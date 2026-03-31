@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMission } from "../api/getMission";
+import { getSessionUserId } from "../utils/sessionUser";
 
 export const useGetMission = () => {
-    const userId = sessionStorage.getItem("user_id");
+    const userId = getSessionUserId();
 
     return useQuery({
         queryKey: ["mission", userId],

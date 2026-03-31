@@ -24,6 +24,7 @@ import { failMission } from "../../../api/getMission";
 import { missionResultStore } from "../../../store/missionResultStore";
 import { getNextResetAt } from "../../../utils/missionReset";
 import { isLegacyNoonResetAt } from "../../../utils/missionReset";
+import { getSessionUserId } from "../../../utils/sessionUser";
 
 
 
@@ -54,7 +55,7 @@ const {setMissionResult, missionResult} = missionResultStore();
   }
 
 useEffect(() => {
-  const userId = sessionStorage.getItem("user_id");
+  const userId = getSessionUserId();
   if (!userId) return;
   const key = `mission_${userId}`;
   const saved = JSON.parse(sessionStorage.getItem(key) || "null");
@@ -94,7 +95,7 @@ const handleSuccess = async () => {
       return;
     }
 
-    const userId = sessionStorage.getItem("user_id");
+    const userId = getSessionUserId();
     await successMission({ user_id: userId, mission_id: missionId });
 
     const key = `mission_${userId}`;
@@ -118,8 +119,7 @@ const handleFail = async () => {
       return;
     }
     
-    const userId = sessionStorage.getItem("user_id");
-
+    const userId = getSessionUserId();
 
     failMission({
       user_id: userId,
