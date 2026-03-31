@@ -8,6 +8,7 @@ const missionListController = require("../controllers/missionListController")
 const getCalenderMissionController = require("../controllers/getCalenderMissionController")
 
 router.post("/mission", getMissionController.getMission);
+router.post("/today-result", getMissionController.getTodayMissionResult);
 router.post("/success", missionSuccessController.successMission)
 router.post("/fail", missionFailController.failMission)
 router.post("/list", missionListController.missionList)

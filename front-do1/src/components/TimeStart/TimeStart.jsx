@@ -1,28 +1,36 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useGetMissionStore } from "../../store/useMissionStore";
 import { missionResultStore } from "../../store/missionResultStore";
+import { getRemainingSeconds, getNextResetAt, isResetPassed } from "../../utils/missionReset";
 
 const TimeStart = ({ children }) => {
-  const { setRemainingTime, setDay, resetTimer } = useGetMissionStore();
+  const { setRemainingTime, setDay, resetTimer, setNextResetAt } = useGetMissionStore();
   const { missionResult, setMissionResult } = missionResultStore();
 
   useEffect(() => {
     if (missionResult !== "success" && missionResult !== "fail") return;
 
-    console.log("타이머 시작됨");
-
     const timer = setInterval(() => {
-      const remaining = useGetMissionStore.getState().remainingTime;
+      const { nextResetAt } = useGetMissionStore.getState();
+      const safeResetAt = isResetPassed(nextResetAt) ? getNextResetAt() : nextResetAt;
+
+      if (safeResetAt !== nextResetAt) {
+        setNextResetAt(safeResetAt);
+      }
+
+      const remaining = getRemainingSeconds(safeResetAt);
 
       if (remaining <= 0) {
         clearInterval(timer);
         setDay((day) => day + 1);
         resetTimer();
-        setMissionResult(null); // 타이머 밖에서 단독으로 호출
+        setMissionResult(null);
+        const userId = sessionStorage.getItem("user_id");
+        if (userId) sessionStorage.removeItem(`mission_${userId}`);
         return;
       }
 
-      setRemainingTime((prev) => prev - 1);
+      setRemainingTime(remaining);
     }, 1000);
 
     return () => clearInterval(timer);

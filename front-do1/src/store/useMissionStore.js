@@ -1,13 +1,12 @@
 import { create } from "zustand";
+import {
+  getNextResetAt,
+  getRemainingSeconds,
+  isResetPassed,
+  isLegacyNoonResetAt,
+} from "../utils/missionReset";
 
 const getUserId = () => sessionStorage.getItem("user_id");
-
-const getSecondsUntilMidnight = () => {
-  const now = new Date();
-  const midnight = new Date();
-  midnight.setHours(24, 0, 0, 0);
-  return Math.floor((midnight - now) / 1000);
-};
 
 export const useGetMissionStore = create((set) => ({
   mission: "",
@@ -19,14 +18,24 @@ export const useGetMissionStore = create((set) => ({
   startTime: null,
   setStartTime: (time) => set({ startTime: time }),
 
-  remainingTime: getSecondsUntilMidnight(),
+  nextResetAt: getNextResetAt(),
+  setNextResetAt: (value) =>
+    set((state) => {
+      const next =
+        typeof value === "function" ? value(state.nextResetAt) : value;
+      const userId = getUserId();
+      if (userId) localStorage.setItem(`missionResetAt_${userId}`, String(next));
+      return { nextResetAt: Number(next) };
+    }),
+
+  remainingTime: getRemainingSeconds(getNextResetAt()),
   setRemainingTime: (value) =>
     set((state) => {
       const next =
         typeof value === "function" ? value(state.remainingTime) : value;
       const userId = getUserId();
       if (userId) localStorage.setItem(`remainingTime_${userId}`, next);
-      return { remainingTime: next };
+      return { remainingTime: Number(next) };
     }),
 
   day: 1,
@@ -47,12 +56,19 @@ export const useGetMissionStore = create((set) => ({
   loadUserState: () => {
     const userId = getUserId();
     if (userId) {
-      const savedTime = localStorage.getItem(`remainingTime_${userId}`);
       const savedDay = localStorage.getItem(`day_${userId}`);
+      const savedResetAt = Number(localStorage.getItem(`missionResetAt_${userId}`));
+      const nextResetAt = isResetPassed(savedResetAt) || isLegacyNoonResetAt(savedResetAt)
+        ? getNextResetAt()
+        : savedResetAt;
+      const remainingTime = getRemainingSeconds(nextResetAt);
+
+      localStorage.setItem(`missionResetAt_${userId}`, String(nextResetAt));
+      localStorage.setItem(`remainingTime_${userId}`, String(remainingTime));
+
       set({
-        remainingTime: savedTime
-          ? Number(savedTime)
-          : getSecondsUntilMidnight(),
+        nextResetAt,
+        remainingTime,
         day: savedDay ? Number(savedDay) : 1,
       });
     }
@@ -60,9 +76,14 @@ export const useGetMissionStore = create((set) => ({
 
   resetTimer: () => {
     const userId = getUserId();
-    const time = getSecondsUntilMidnight();
-    if (userId) localStorage.setItem(`remainingTime_${userId}`, time);
+    const nextResetAt = getNextResetAt();
+    const time = getRemainingSeconds(nextResetAt);
+    if (userId) {
+      localStorage.setItem(`missionResetAt_${userId}`, String(nextResetAt));
+      localStorage.setItem(`remainingTime_${userId}`, String(time));
+    }
     set({
+      nextResetAt,
       remainingTime: time,
       startTime: null,
       status: "idle",

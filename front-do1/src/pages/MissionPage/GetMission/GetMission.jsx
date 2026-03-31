@@ -22,6 +22,8 @@ import { useGetMission } from "../../../hooks/useGetMission";
 import { successMission } from "../../../api/getMission";
 import { failMission } from "../../../api/getMission";
 import { missionResultStore } from "../../../store/missionResultStore";
+import { getNextResetAt } from "../../../utils/missionReset";
+import { isLegacyNoonResetAt } from "../../../utils/missionReset";
 
 
 
@@ -53,12 +55,15 @@ const {setMissionResult, missionResult} = missionResultStore();
 
 useEffect(() => {
   const userId = sessionStorage.getItem("user_id");
+  if (!userId) return;
   const key = `mission_${userId}`;
-  const today = new Date().toISOString().slice(0, 10);
+  const saved = JSON.parse(sessionStorage.getItem(key) || "null");
+  const now = Date.now();
 
-  const saved = JSON.parse(sessionStorage.getItem(key));
+  const isValidResetAt =
+    saved?.resetAt && now < saved.resetAt && !isLegacyNoonResetAt(saved.resetAt);
 
-  if (saved && saved.date === today) {
+  if (saved && isValidResetAt) {
     setMission(saved.mission);
     setMissionId(saved.missionId);
     setStatus("in_progress");
@@ -76,7 +81,7 @@ useEffect(() => {
       JSON.stringify({
         mission: data.mission_content,
         missionId: data.mission_id,
-        date: today,
+        resetAt: getNextResetAt(),
       }),
     );
   }

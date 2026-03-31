@@ -25,15 +25,8 @@ export const setUserStore = create((set) => ({
   },
 
   logoutUser: () => {
-    const userId = sessionStorage.getItem("user_id");
     set({ user: null });
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("user_id");
-    // 로그아웃 시 해당 유저 localStorage 데이터 삭제
-    if (userId) {
-      localStorage.removeItem(`missionResult_${userId}`);
-      localStorage.removeItem(`remainingTime_${userId}`);
-      localStorage.removeItem(`day_${userId}`);
-    }
   },
 }));

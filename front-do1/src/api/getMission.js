@@ -8,6 +8,14 @@ export const getMission = async () => {
   return res.data;
 };
 
+export const getTodayMissionResult = async () => {
+  const user_id = sessionStorage.getItem("user_id");
+  const res = await axios.post("http://localhost:3000/getMission/today-result", {
+    user_id,
+  });
+  return res.data;
+};
+
 export const successMission = async(data) => {
     const res = await axios.post("http://localhost:3000/getMission/success", data);
     return res.data;
