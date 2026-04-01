@@ -1,8 +1,7 @@
-import pool from "../db/db.js";
+const pool = require("../db/db");
 
-export const missionList = async (req, res) => {
-
-    const {user_id} = req.body;
+exports.missionList = async (req, res) => {
+  const { user_id } = req.body;
 
   try {
     const result = await pool.query(
@@ -15,12 +14,9 @@ export const missionList = async (req, res) => {
             `,
       [user_id],
     );
-        const mission = result.rows;
+    const mission = result.rows;
 
-        res.json(mission);
-
-
-    
+    res.json(mission);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "" });
