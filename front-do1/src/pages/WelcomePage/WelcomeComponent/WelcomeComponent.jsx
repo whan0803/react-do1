@@ -2,7 +2,7 @@ import style from './WelcomeComponent.module.css'
 import { useNavigate } from 'react-router-dom'
 
 
-import mainCharactor from '../../../assets/스크린샷 2026-03-15 212411-Photoroom 1.png'
+import mainCharactor from '../../../assets/mainCharactor.png'
 import logo from '../../../assets/logo.png'
 
 const WelcomeComponent = () => {
