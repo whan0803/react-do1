@@ -24,7 +24,8 @@ export const useGetMissionStore = create((set) => ({
       const next =
         typeof value === "function" ? value(state.nextResetAt) : value;
       const userId = getSessionUserId();
-      if (userId) localStorage.setItem(`missionResetAt_${userId}`, String(next));
+      if (userId)
+        localStorage.setItem(`missionResetAt_${userId}`, String(next));
       return { nextResetAt: Number(next) };
     }),
 
@@ -57,32 +58,34 @@ export const useGetMissionStore = create((set) => ({
     const userId = getSessionUserId();
     if (!userId) return;
 
-    const savedDayRaw = localStorage.getItem(`day_${userId}`);
-    const savedDayNum = savedDayRaw ? Number(savedDayRaw) : 0;
-
     let dbDays = 0;
     try {
       const data = await getMissionDayCount();
       dbDays = Number(data?.mission_days) || 0;
-    } catch {}
+    } catch (err) {
+      // DB 실패 시에만 로컬 폴백
+      const savedDayRaw = localStorage.getItem(`day_${userId}`);
+      dbDays = savedDayRaw ? Number(savedDayRaw) : 1;
+      console.log(err);
+    }
 
-    const day = Math.max(savedDayNum, dbDays, 1);
+    // ✅ DB 값 우선, 최소 1
+    const day = Math.max(dbDays, 1);
     localStorage.setItem(`day_${userId}`, String(day));
 
-    const savedResetAt = Number(localStorage.getItem(`missionResetAt_${userId}`));
-    const nextResetAt = isResetPassed(savedResetAt) || isLegacyNoonResetAt(savedResetAt)
-      ? getNextResetAt()
-      : savedResetAt;
+    const savedResetAt = Number(
+      localStorage.getItem(`missionResetAt_${userId}`),
+    );
+    const nextResetAt =
+      isResetPassed(savedResetAt) || isLegacyNoonResetAt(savedResetAt)
+        ? getNextResetAt()
+        : savedResetAt;
     const remainingTime = getRemainingSeconds(nextResetAt);
 
     localStorage.setItem(`missionResetAt_${userId}`, String(nextResetAt));
     localStorage.setItem(`remainingTime_${userId}`, String(remainingTime));
 
-    set({
-      nextResetAt,
-      remainingTime,
-      day,
-    });
+    set({ nextResetAt, remainingTime, day });
   },
 
   resetTimer: () => {

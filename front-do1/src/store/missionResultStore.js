@@ -3,6 +3,8 @@ import { getNextResetAt, isResetPassed } from "../utils/missionReset";
 import { getTodayMissionResult } from "../api/getMission";
 import { getSessionUserId } from "../utils/sessionUser";
 
+const getTodayDate = () => new Date().toISOString().slice(0, 10); // "2025-04-02"
+
 export const missionResultStore = create((set) => ({
   missionResult: null,
 
@@ -11,13 +13,11 @@ export const missionResultStore = create((set) => ({
     if (userId) {
       if (result) {
         localStorage.setItem(`missionResult_${userId}`, result);
-        localStorage.setItem(
-          `missionResultResetAt_${userId}`,
-          String(getNextResetAt()),
-        );
+        // ✅ resetAt 대신 오늘 날짜 저장
+        localStorage.setItem(`missionResultDate_${userId}`, getTodayDate());
       } else {
         localStorage.removeItem(`missionResult_${userId}`);
-        localStorage.removeItem(`missionResultResetAt_${userId}`);
+        localStorage.removeItem(`missionResultDate_${userId}`);
       }
     }
     set({ missionResult: result });
@@ -27,34 +27,41 @@ export const missionResultStore = create((set) => ({
     const userId = getSessionUserId();
     if (!userId) return;
 
+    // ✅ 로컬 날짜가 오늘이 아니면 즉시 클리어, DB 호출도 안 함
+    const savedDate = localStorage.getItem(`missionResultDate_${userId}`);
+    if (savedDate && savedDate !== getTodayDate()) {
+      localStorage.removeItem(`missionResult_${userId}`);
+      localStorage.removeItem(`missionResultDate_${userId}`);
+      set({ missionResult: null });
+      return;
+    }
+
     try {
       const data = await getTodayMissionResult();
       const dbResult = data?.missionResult ?? null;
 
       if (dbResult === "success" || dbResult === "fail") {
         localStorage.setItem(`missionResult_${userId}`, dbResult);
-        localStorage.setItem(
-          `missionResultResetAt_${userId}`,
-          String(getNextResetAt()),
-        );
+        localStorage.setItem(`missionResultDate_${userId}`, getTodayDate());
         set({ missionResult: dbResult });
         return;
       }
 
       localStorage.removeItem(`missionResult_${userId}`);
-      localStorage.removeItem(`missionResultResetAt_${userId}`);
+      localStorage.removeItem(`missionResultDate_${userId}`);
       set({ missionResult: null });
     } catch {
       const saved = localStorage.getItem(`missionResult_${userId}`);
-      const resetAt = Number(localStorage.getItem(`missionResultResetAt_${userId}`));
+      const savedDate = localStorage.getItem(`missionResultDate_${userId}`);
 
-      if (saved && !isResetPassed(resetAt)) {
+      // ✅ 오프라인이어도 날짜가 오늘이면 유지
+      if (saved && savedDate === getTodayDate()) {
         set({ missionResult: saved });
         return;
       }
 
       localStorage.removeItem(`missionResult_${userId}`);
-      localStorage.removeItem(`missionResultResetAt_${userId}`);
+      localStorage.removeItem(`missionResultDate_${userId}`);
       set({ missionResult: null });
     }
   },

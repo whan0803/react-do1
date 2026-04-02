@@ -1,29 +1,20 @@
+// api/user.js
 import axios from "axios";
 
-export const signup = (data) => {
-    return axios.post(
-      "https://do1-backend-gbag47575-3813-gyeungwhans-projects.vercel.app/api/signup",
-      data,
-    );
-}
+const api = axios.create({
+  baseURL:
+    "https://do1-backend-gbag47575-3813-gyeungwhans-projects.vercel.app/api",
+  timeout: 10000,
+});
 
-export const login = (data) => {
-    return axios.post(
-      "https://do1-backend-gbag47575-3813-gyeungwhans-projects.vercel.app/api/login",
-      data,
-    );
-}
+// 앱 시작 시 서버 워밍업 (콜드 스타트 방지)
+api.get("/health").catch(() => {});
 
-export const getProfile = (data) => {
-    return axios.post(
-      "https://do1-backend-gbag47575-3813-gyeungwhans-projects.vercel.app/api/me",
-      data,
-    );
-}
+export const signup = (data) => api.post("/signup", data);
+export const login = (data) => api.post("/login", data);
+export const getProfile = (data) => api.post("/me", data);
+export const updateProfile = (data) => api.post("/update", data);
 
-export const updateProfile = (data) => {
-    return axios.post(
-      "https://do1-backend-gbag47575-3813-gyeungwhans-projects.vercel.app/api/update",
-      data,
-    );
-}
+export default api
+
+

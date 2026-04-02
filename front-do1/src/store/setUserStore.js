@@ -29,6 +29,20 @@ export const setUserStore = create((set) => ({
   },
 
   logoutUser: () => {
+    // ✅ 로그아웃 시 이전 유저 localStorage 클리어
+    const storeUser = sessionStorage.getItem("user");
+    if (storeUser) {
+      const parsed = JSON.parse(storeUser);
+      const userId = parsed?.user_id;
+      if (userId) {
+        localStorage.removeItem(`missionResult_${userId}`);
+        localStorage.removeItem(`missionResultDate_${userId}`);
+        localStorage.removeItem(`day_${userId}`);
+        localStorage.removeItem(`missionResetAt_${userId}`);
+        localStorage.removeItem(`remainingTime_${userId}`);
+      }
+    }
+
     set({ user: null });
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("user_id");

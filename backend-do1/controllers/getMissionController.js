@@ -37,10 +37,10 @@ exports.getTodayMissionResult = async (req, res) => {
       SELECT is_success
       FROM mission_record
       WHERE user_id = $1
-      AND record_date = current_date
+      AND record_date = (current_timestamp AT TIME ZONE 'Asia/Seoul')::date
       ORDER BY record_id DESC
       LIMIT 1;
-    `,
+      `,
       [user_id],
     );
 
@@ -66,7 +66,7 @@ exports.getMissionDayCount = async (req, res) => {
       SELECT COUNT(DISTINCT record_date)::int AS mission_days
       FROM mission_record
       WHERE user_id = $1;
-    `,
+      `,
       [user_id],
     );
 
