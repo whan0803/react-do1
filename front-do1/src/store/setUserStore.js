@@ -38,6 +38,7 @@ export const setUserStore = create((set) => ({
         localStorage.removeItem(`missionResult_${userId}`);
         localStorage.removeItem(`missionResultDate_${userId}`);
         localStorage.removeItem(`day_${userId}`);
+        localStorage.removeItem(`dayCycleKey_${userId}`);
         localStorage.removeItem(`missionResetAt_${userId}`);
         localStorage.removeItem(`remainingTime_${userId}`);
       }

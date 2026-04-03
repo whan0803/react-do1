@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { getNextResetAt, isResetPassed } from "../utils/missionReset";
+import { formatLocalDate } from "../utils/missionReset";
 import { getTodayMissionResult } from "../api/getMission";
 import { getSessionUserId } from "../utils/sessionUser";
 
-const getTodayDate = () => new Date().toISOString().slice(0, 10); // "2025-04-02"
+const getTodayDate = () => formatLocalDate(new Date());
 
 export const missionResultStore = create((set) => ({
   missionResult: null,

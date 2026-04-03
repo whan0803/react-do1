@@ -2,11 +2,30 @@ import { create } from "zustand";
 import {
   getNextResetAt,
   getRemainingSeconds,
+  getMissionCycleKey,
   isResetPassed,
   isLegacyNoonResetAt,
 } from "../utils/missionReset";
 import { getSessionUserId } from "../utils/sessionUser";
 import { getMissionDayCount } from "../api/getMission";
+
+const getStoredDay = (userId) => {
+  const savedDayRaw = localStorage.getItem(`day_${userId}`);
+  const savedDay = Number(savedDayRaw);
+  return Number.isFinite(savedDay) && savedDay > 0 ? savedDay : null;
+};
+
+const getDayDiff = (fromKey, toKey) => {
+  if (!fromKey || !toKey) return 0;
+
+  const fromDate = new Date(`${fromKey}T00:00:00`);
+  const toDate = new Date(`${toKey}T00:00:00`);
+  const diffMs = toDate.getTime() - fromDate.getTime();
+
+  if (!Number.isFinite(diffMs) || diffMs <= 0) return 0;
+
+  return Math.floor(diffMs / (24 * 60 * 60 * 1000));
+};
 
 export const useGetMissionStore = create((set) => ({
   mission: "",
@@ -44,7 +63,10 @@ export const useGetMissionStore = create((set) => ({
     set((state) => {
       const next = typeof value === "function" ? value(state.day) : value;
       const userId = getSessionUserId();
-      if (userId) localStorage.setItem(`day_${userId}`, String(next));
+      if (userId) {
+        localStorage.setItem(`day_${userId}`, String(next));
+        localStorage.setItem(`dayCycleKey_${userId}`, getMissionCycleKey());
+      }
       return { day: next };
     }),
 
@@ -57,6 +79,7 @@ export const useGetMissionStore = create((set) => ({
   loadUserState: async () => {
     const userId = getSessionUserId();
     if (!userId) return;
+    const currentCycleKey = getMissionCycleKey();
 
     let dbDays = 0;
     try {
@@ -64,14 +87,19 @@ export const useGetMissionStore = create((set) => ({
       dbDays = Number(data?.mission_days) || 0;
     } catch (err) {
       // DB 실패 시에만 로컬 폴백
-      const savedDayRaw = localStorage.getItem(`day_${userId}`);
-      dbDays = savedDayRaw ? Number(savedDayRaw) : 1;
+      dbDays = getStoredDay(userId) ?? 1;
       console.log(err);
     }
 
-    // ✅ DB 값 우선, 최소 1
-    const day = Math.max(dbDays, 1);
+    const savedDay = getStoredDay(userId);
+    const savedCycleKey = localStorage.getItem(`dayCycleKey_${userId}`);
+    const progressedDay =
+      savedDay == null ? 0 : savedDay + getDayDiff(savedCycleKey, currentCycleKey);
+
+    // DB 완료 일수와 현재 미션 사이클 경과분을 함께 반영
+    const day = Math.max(dbDays, progressedDay, 1);
     localStorage.setItem(`day_${userId}`, String(day));
+    localStorage.setItem(`dayCycleKey_${userId}`, currentCycleKey);
 
     const savedResetAt = Number(
       localStorage.getItem(`missionResetAt_${userId}`),
