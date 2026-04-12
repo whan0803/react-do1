@@ -1,10 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+const { initDb } = require("./db/initDb");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+initDb().catch((err) => {
+  console.error("DB initialization failed:", err);
+});
 
 const userRouter = require("./routers/userRouter");
 const getMissionRouter = require("./routers/getMissionRouter");

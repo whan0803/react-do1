@@ -22,10 +22,19 @@ const WelcomeComponent = () => {
           className={style.mainCharactor}
           src={mainCharactor}
           alt="메인 캐릭터"
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
         />
 
         <div className={style.Wrapper}>
-          <img src={logo} alt="logo" />
+          <img
+            src={logo}
+            alt="logo"
+            fetchPriority="high"
+            loading="eager"
+            decoding="async"
+          />
           <button className={style.button} onClick={goLogin}>로그인</button>
           <button className={style.button} onClick={goSignup}>회원가입</button>
         </div>

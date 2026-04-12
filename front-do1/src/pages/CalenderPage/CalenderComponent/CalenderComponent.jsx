@@ -2,62 +2,64 @@ import style from "./CalenderComponent.module.css";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { format } from "date-fns";
-
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { getCalenderMission } from "../../../api/getCalenderMission";
-
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
 
-
 const CalenderComponent = () => {
+  const { data: missionRecord = [] } = useQuery({
+    queryKey: ["calendar-mission-record"],
+    queryFn: getCalenderMission,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const [missionRecord, setMissionRecord] = useState([]);
+  const missionRecordMap = useMemo(
+    () =>
+      new Map(
+        missionRecord.map((item) => [
+          item.record_date ?? item.to_char,
+          item.is_success,
+        ]),
+      ),
+    [missionRecord],
+  );
 
+  const successCount = useMemo(
+    () => missionRecord.filter((item) => item.is_success).length,
+    [missionRecord],
+  );
 
-  useEffect(() => {
-    const fetchData = async() => {
-      const result  = await getCalenderMission();
-      console.log(result);
-      setMissionRecord(result);
+  const maxStreak = useMemo(() => {
+    const sorted = [...missionRecord].sort(
+      (a, b) => new Date(a.record_date) - new Date(b.record_date),
+    );
+
+    let streak = 0;
+    let nextMaxStreak = 0;
+
+    for (let i = 0; i < sorted.length; i += 1) {
+      if (sorted[i].is_success) {
+        streak += 1;
+        nextMaxStreak = Math.max(nextMaxStreak, streak);
+      } else {
+        streak = 0;
+      }
     }
-    fetchData();
-  },[])
+
+    return nextMaxStreak;
+  }, [missionRecord]);
 
   const getTileClass = ({ date, view }) => {
     if (view !== "month") return;
 
     const formattedDate = format(date, "yyyy-MM-dd");
-
-    const record = missionRecord.find(
-      (item) => item.to_char === formattedDate,
-    );
-
-    if (!record) return;
-
-    return record.is_success ? style.success : style.fail;
+    const isSuccess = missionRecordMap.get(formattedDate);
+    if (typeof isSuccess !== "boolean") return;
+    return isSuccess ? style.success : style.fail;
   };
-
-
-  const successCount = missionRecord.filter((item) => item.is_success).length;
-
-
-  const sorted = [...missionRecord].sort(
-    (a, b) => new Date(a.record_date) - new Date(b.record_date),
-  );
-
-  let streak = 0;
-  let maxStreak = 0;
-
-  for (let i = 0; i < sorted.length; i++) {
-    if (sorted[i].is_success) {
-      streak++;
-      maxStreak = Math.max(maxStreak, streak);
-    } else {
-      streak = 0;
-    }
-  }
 
   return (
     <div className={style.wrapper}>

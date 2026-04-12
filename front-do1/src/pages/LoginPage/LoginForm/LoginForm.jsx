@@ -76,7 +76,13 @@ const LoginForm = () => {
         </button>
       </div>
 
-      <img className={style.img} src={loginCharactor} alt="" />
+      <img
+        className={style.img}
+        src={loginCharactor}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
     </div>
   );
 };

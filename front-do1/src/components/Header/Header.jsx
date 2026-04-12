@@ -23,10 +23,10 @@ const Header = () => {
 
     return (
       <div className={style.Header}>
-        <img className={style.logo} src={logo} alt="로고" />
+        <img className={style.logo} src={logo} alt="로고" loading="eager" decoding="async" />
         <div className={style.userWrapper}>
           <p onClick={goLogout}>로그아웃</p>
-          <img src={profile} onClick={goProfile} alt="프로필" />
+          <img src={profile} onClick={goProfile} alt="프로필" loading="lazy" decoding="async" />
         </div>
       </div>
     );

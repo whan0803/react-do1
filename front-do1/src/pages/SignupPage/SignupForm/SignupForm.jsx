@@ -119,10 +119,10 @@ const SignupForm = () => {
         </div>
 
         <div className={style.imgWrapper}>
-          <img src={leftCharactor} alt="leftCharactor1" />
-          <img src={leftCharactor} alt="leftCharactor2" />
-          <img src={leftCharactor} alt="leftCharactor3" />
-          <img src={leftCharactor} alt="leftCharactor4" />
+          <img src={leftCharactor} alt="leftCharactor1" loading="lazy" decoding="async" />
+          <img src={leftCharactor} alt="leftCharactor2" loading="lazy" decoding="async" />
+          <img src={leftCharactor} alt="leftCharactor3" loading="lazy" decoding="async" />
+          <img src={leftCharactor} alt="leftCharactor4" loading="lazy" decoding="async" />
         </div>
       </div>
     );

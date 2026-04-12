@@ -1,18 +1,6 @@
 const pool = require("../db/db");
 const bcrypt = require("bcrypt");
 
-// 인덱스가 없으면 서버 시작 시 자동 생성 (최초 1회)
-const ensureIndex = async () => {
-  try {
-    await pool.query(`
-            CREATE INDEX IF NOT EXISTS idx_users_email ON users(user_email)
-        `);
-  } catch (err) {
-    console.error("인덱스 생성 실패:", err);
-  }
-};
-ensureIndex();
-
 exports.createUser = async (req, res) => {
   try {
     const { user_name, user_email, user_password, user_birth } = req.body;

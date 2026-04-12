@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import style from "./Main.module.css";
 import defaultChar from "../../assets/default.png";
 import { userChatMessageStore } from "../../store/userChatMessageStore";
@@ -13,12 +12,7 @@ const Main = () => {
   const navigate = useNavigate();
 
   const { message, index, nextMessage } = userChatMessageStore();
-  const { missionResult, loadMissionResult } = missionResultStore();
-
-  // 마운트 시 유저별 missionResult 불러오기
-  useEffect(() => {
-    loadMissionResult();
-  }, []);
+  const { missionResult } = missionResultStore();
 
   const getCharacter = () => {
     if (missionResult === "success") return successImg;
@@ -53,7 +47,14 @@ const Main = () => {
         <div className={style.bubble}>
           <h2>{currentMessage[safeIndex]}</h2>
         </div>
-        <img src={getCharacter()} onClick={handleClick} alt="" />
+        <img
+          src={getCharacter()}
+          onClick={handleClick}
+          alt=""
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+        />
       </div>
     </div>
   );

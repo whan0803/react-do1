@@ -21,9 +21,9 @@ const Footer = () => {
     }
     return (
         <div className={style.Footer}>
-            <img src={calender} onClick={goCalender} alt="달력" />
-            <img src={home} onClick={goHome} alt="홈" />
-            <img src={list} onClick={goList} alt="리스트" />
+            <img src={calender} onClick={goCalender} alt="달력" loading="lazy" decoding="async" />
+            <img src={home} onClick={goHome} alt="홈" loading="lazy" decoding="async" />
+            <img src={list} onClick={goList} alt="리스트" loading="lazy" decoding="async" />
         </div>
     )
 }

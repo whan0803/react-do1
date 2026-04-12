@@ -160,7 +160,13 @@ const GetMission = () => {
           </div>
         </div>
 
-        <img className={style.MissionImg} src={MissionImg} alt="미션 캐릭터" />
+        <img
+          className={style.MissionImg}
+          src={MissionImg}
+          alt="미션 캐릭터"
+          loading="eager"
+          decoding="async"
+        />
       </main>
 
       <Footer />
@@ -198,6 +204,8 @@ const GetMission = () => {
                   key={alt}
                   src={src}
                   alt={alt}
+                  loading="lazy"
+                  decoding="async"
                   onClick={() => setSelectedEmotion(alt)}
                   className={
                     selectedEmotion === alt

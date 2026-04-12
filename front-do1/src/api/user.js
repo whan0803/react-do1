@@ -7,14 +7,32 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// 앱 시작 시 서버 워밍업 (콜드 스타트 방지)
-api.get("/health").catch(() => {});
+const warmServerOnce = () => {
+  if (typeof window === "undefined") return;
+  if (window.sessionStorage.getItem("api_warmed") === "true") return;
+
+  const runWarmup = () => {
+    api
+      .get("/health")
+      .then(() => {
+        window.sessionStorage.setItem("api_warmed", "true");
+      })
+      .catch(() => {});
+  };
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(runWarmup, { timeout: 2000 });
+    return;
+  }
+
+  window.setTimeout(runWarmup, 1500);
+};
+
+warmServerOnce();
 
 export const signup = (data) => api.post("/signup", data);
 export const login = (data) => api.post("/login", data);
 export const getProfile = (data) => api.post("/me", data);
 export const updateProfile = (data) => api.post("/update", data);
 
-export default api
-
-
+export default api;

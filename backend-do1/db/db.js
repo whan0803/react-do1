@@ -3,7 +3,12 @@ const { Pool } = require("pg");
 
 const connectionString = process.env.DATABASE_URL;
 
-const poolConfig = { connectionString };
+const poolConfig = {
+  connectionString,
+  max: process.env.VERCEL === "1" ? 5 : 10,
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 5000,
+};
 
 const isRemoteDb =
   connectionString &&

@@ -2,20 +2,20 @@ const pool = require("../db/db");
 
 exports.getMission = async (req, res) => {
   try {
-    const { user_id } = req.body;
-
     const result = await pool.query(
       `
-      SELECT mission_id, mission_content 
-      FROM mission_table, users 
-        WHERE user_id = $1
-      ORDER BY random() 
+      SELECT mission_id, mission_content
+      FROM mission_table
+      OFFSET floor(random() * GREATEST((SELECT COUNT(*) FROM mission_table), 1))
       LIMIT 1;
     `,
-      [user_id],
     );
 
     const mission = result.rows[0];
+
+    if (!mission) {
+      return res.status(404).json({ message: "미션이 없습니다" });
+    }
 
     res.json({
       message: "미션 가져오기 성공",
@@ -63,9 +63,13 @@ exports.getMissionDayCount = async (req, res) => {
 
     const result = await pool.query(
       `
-      SELECT COUNT(DISTINCT record_date)::int AS mission_days
-      FROM mission_record
-      WHERE user_id = $1;
+      SELECT COUNT(*)::int AS mission_days
+      FROM (
+        SELECT record_date
+        FROM mission_record
+        WHERE user_id = $1
+        GROUP BY record_date
+      ) AS grouped_dates;
       `,
       [user_id],
     );

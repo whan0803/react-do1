@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import style from "./ListPageComponent.module.css";
 import Header from "../../../components/Header/Header";
 import Footer from "../../../components/Footer/Footer";
@@ -6,27 +7,22 @@ import ListItem from "./ListItem/ListItem";
 import { missionList } from "../../../api/missionList";
 
 const ListPageComponent = () => {
-  const [data, setData] = useState([]);
   const [filter, setFilter] = useState("all");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await missionList();
-      setData(result);
-    };
-    fetchData();
-  }, []);
+  const { data = [] } = useQuery({
+    queryKey: ["mission-list"],
+    queryFn: missionList,
+    staleTime: 1000 * 60 * 5,
+  });
 
   const toggleFilter = (type) => {
     setFilter((prev) => (prev === type ? "all" : type));
   };
 
-  const filterData =
-    filter === "success"
-      ? data.filter((i) => i.is_success)
-      : filter === "fail"
-        ? data.filter((i) => !i.is_success)
-        : data;
+  const filterData = useMemo(() => {
+    if (filter === "success") return data.filter((item) => item.is_success);
+    if (filter === "fail") return data.filter((item) => !item.is_success);
+    return data;
+  }, [data, filter]);
 
   return (
     <div className={style.ListPageComponent}>
@@ -36,7 +32,7 @@ const ListPageComponent = () => {
         <div className={style.ItemWrapper}>
           {filterData.map((item, index) => (
             <ListItem
-              key={item.id}
+              key={`${item.mission_content}-${index}`}
               index={index}
               content={item.mission_content}
               success={item.is_success}
