@@ -28,7 +28,7 @@ create table mission_record(
     is_success boolean not null,
     failure_emotion varchar(100),
     failure_reason varchar(300),
-    unique(mission_id, user_id)
+    unique(user_id, record_date)
 )
 
 select * from mission_record;

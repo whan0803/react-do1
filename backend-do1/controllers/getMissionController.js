@@ -30,7 +30,7 @@ exports.getMission = async (req, res) => {
 
 exports.getTodayMissionResult = async (req, res) => {
   try {
-    const { user_id } = req.body;
+    const userId = req.user.userId;
 
     const result = await pool.query(
       `
@@ -41,7 +41,7 @@ exports.getTodayMissionResult = async (req, res) => {
       ORDER BY record_id DESC
       LIMIT 1;
       `,
-      [user_id],
+      [userId],
     );
 
     if (result.rows.length === 0) {
@@ -59,7 +59,7 @@ exports.getTodayMissionResult = async (req, res) => {
 
 exports.getMissionDayCount = async (req, res) => {
   try {
-    const { user_id } = req.body;
+    const userId = req.user.userId;
 
     const result = await pool.query(
       `
@@ -71,7 +71,7 @@ exports.getMissionDayCount = async (req, res) => {
         GROUP BY record_date
       ) AS grouped_dates;
       `,
-      [user_id],
+      [userId],
     );
 
     const mission_days = result.rows[0]?.mission_days ?? 0;

@@ -1,7 +1,7 @@
 const pool = require("../db/db");
 
 exports.missionList = async (req, res) => {
-  const { user_id } = req.body;
+  const userId = req.user.userId;
 
   try {
     const result = await pool.query(
@@ -12,7 +12,7 @@ exports.missionList = async (req, res) => {
             ON mr.mission_id = mt.mission_id
             WHERE mr.user_id = $1;
             `,
-      [user_id],
+      [userId],
     );
     const mission = result.rows;
 

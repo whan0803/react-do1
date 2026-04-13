@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+const authMiddleware = require("../middlewares/authMiddleware");
 const getMissionController = require("../controllers/getMissionController");
 const missionSuccessController = require("../controllers/missionSuccessController");
 const missionFailController = require("../controllers/missionFailController");
 const missionListController = require("../controllers/missionListController");
 const getCalenderMissionController = require("../controllers/getCalenderMissionController");
+
+router.use(authMiddleware);
 
 router.post("/mission", getMissionController.getMission);
 router.post("/today-result", getMissionController.getTodayMissionResult);

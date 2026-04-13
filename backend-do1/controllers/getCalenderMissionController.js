@@ -2,7 +2,7 @@ const pool = require("../db/db");
 
 exports.getCalenderMission = async (req, res) => {
   try {
-    const { user_id } = req.body;
+    const userId = req.user.userId;
 
     const data = await pool.query(
       `
@@ -12,7 +12,7 @@ exports.getCalenderMission = async (req, res) => {
             ON mr.mission_id = mt.mission_id
             WHERE mr.user_id = $1;
             `,
-      [user_id],
+      [userId],
     );
 
     const mission = data.rows;

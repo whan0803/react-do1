@@ -37,10 +37,12 @@ function App() {
     const { loadUserState } = useGetMissionStore.getState();
     const { loadMissionResult } = missionResultStore.getState();
 
-    loadUser();
-    initMessage();
-    loadUserState();
-    loadMissionResult();
+    (async () => {
+      await loadUser();
+      initMessage();
+      loadUserState();
+      loadMissionResult();
+    })();
   }, []);
 
   return (

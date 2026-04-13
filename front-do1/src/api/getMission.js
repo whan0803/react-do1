@@ -1,21 +1,17 @@
 import api from "./user";
-import { getSessionUserId } from "../utils/sessionUser";
 
 export const getMission = async () => {
-  const user_id = getSessionUserId();
-  const res = await api.post("/mission", { user_id });
+  const res = await api.post("/mission");
   return res.data;
 };
 
 export const getTodayMissionResult = async () => {
-  const user_id = getSessionUserId();
-  const res = await api.post("/today-result", { user_id });
+  const res = await api.post("/today-result");
   return res.data;
 };
 
 export const getMissionDayCount = async () => {
-  const user_id = getSessionUserId();
-  const res = await api.post("/day-count", { user_id });
+  const res = await api.post("/day-count");
   return res.data;
 };
 

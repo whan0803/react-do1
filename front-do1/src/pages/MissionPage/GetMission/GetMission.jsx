@@ -25,7 +25,7 @@ import {
   getNextResetAt,
   isLegacyNoonResetAt,
 } from "../../../utils/missionReset";
-import { getSessionUserId } from "../../../utils/sessionUser";
+import { hasAccessToken } from "../../../utils/sessionUser";
 
 const GetMission = () => {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const GetMission = () => {
   } = useModal();
 
   const { data, isLoading } = useGetMission();
-  const { mission, setMission, setMissionId, setStatus, missionId } =
+  const { mission, setMission, setMissionId, setStatus, missionId, loadUserState } =
     useGetMissionStore();
   const { setMissionResult, missionResult } = missionResultStore();
 
@@ -52,10 +52,8 @@ const GetMission = () => {
   };
 
   useEffect(() => {
-    const userId = getSessionUserId();
-    if (!userId) return;
-    const key = `mission_${userId}`;
-    const saved = JSON.parse(sessionStorage.getItem(key) || "null");
+    if (!hasAccessToken()) return;
+    const saved = JSON.parse(localStorage.getItem("mission") || "null");
     const now = Date.now();
 
     const isValidResetAt =
@@ -75,8 +73,8 @@ const GetMission = () => {
       setMissionId(data.mission_id);
       setStatus("in_progress");
 
-      sessionStorage.setItem(
-        key,
+      localStorage.setItem(
+        "mission",
         JSON.stringify({
           mission: data.mission_content,
           missionId: data.mission_id,
@@ -93,11 +91,10 @@ const GetMission = () => {
         return;
       }
 
-      const userId = getSessionUserId();
-      await successMission({ user_id: userId, mission_id: missionId });
+      await successMission({ mission_id: missionId });
+      await loadUserState();
 
-      const key = `mission_${userId}`;
-      sessionStorage.removeItem(key);
+      localStorage.removeItem("mission");
       setMissionResult("success");
       alert("미션을 성공했습니다");
       setStatus("success");
@@ -115,17 +112,14 @@ const GetMission = () => {
         return;
       }
 
-      const userId = getSessionUserId();
-
       await failMission({
-        user_id: userId,
         mission_id: missionId,
         failure_reason: failForm.failure_reason,
         failure_emotion: selectedEmotion,
       });
+      await loadUserState();
 
-      const key = `mission_${userId}`;
-      sessionStorage.removeItem(key);
+      localStorage.removeItem("mission");
       setMissionResult("fail");
       alert("미션 등록 성공");
       setStatus("fail");

@@ -1,13 +1,14 @@
-export const getSessionUserId = () => {
-  const direct = sessionStorage.getItem("user_id");
-  if (direct != null && direct !== "") return String(direct);
-  try {
-    const raw = sessionStorage.getItem("user");
-    if (!raw) return null;
-    const u = JSON.parse(raw);
-    if (u?.user_id == null) return null;
-    return String(u.user_id);
-  } catch {
-    return null;
-  }
+const ACCESS_TOKEN_KEY = "accessToken";
+
+export const getAccessToken = () => localStorage.getItem(ACCESS_TOKEN_KEY);
+
+export const setAccessToken = (token) => {
+  if (!token) return;
+  localStorage.setItem(ACCESS_TOKEN_KEY, token);
 };
+
+export const clearAccessToken = () => {
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+};
+
+export const hasAccessToken = () => Boolean(getAccessToken());

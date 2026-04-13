@@ -6,8 +6,6 @@ import {
   getNextResetAt,
   isResetPassed,
 } from "../../utils/missionReset";
-import { getSessionUserId } from "../../utils/sessionUser";
-
 const TimeStart = ({ children }) => {
   const { setRemainingTime, setDay, resetTimer, setNextResetAt } =
     useGetMissionStore();
@@ -33,8 +31,7 @@ const TimeStart = ({ children }) => {
         setDay((day) => day + 1);
         resetTimer();
         setMissionResult(null);
-        const userId = getSessionUserId();
-        if (userId) sessionStorage.removeItem(`mission_${userId}`);
+        localStorage.removeItem("mission");
         return true; // 리셋됨
       }
 

@@ -2,7 +2,7 @@ import style from "./ProfileComponent.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProfile, updateProfile } from "../../../api/user";
-import { getSessionUserId } from "../../../utils/sessionUser";
+import { hasAccessToken } from "../../../utils/sessionUser";
 import { setUserStore } from "../../../store/setUserStore";
 
 const ProfileComponent = () => {
@@ -35,15 +35,14 @@ const ProfileComponent = () => {
   }, [year, month, dayInMonth, day]);
 
   useEffect(() => {
-    const userId = getSessionUserId();
-    if (!userId) {
+    if (!hasAccessToken()) {
       setLoading(false);
       return;
     }
 
     (async () => {
       try {
-        const res = await getProfile({ user_id: userId });
+        const res = await getProfile();
         const data = res.data;
         setUserName(data.user_name || "");
         setUserEmail(data.user_email || "");
@@ -64,8 +63,7 @@ const ProfileComponent = () => {
   }, []);
 
   const handleSave = async () => {
-    const userId = getSessionUserId();
-    if (!userId) {
+    if (!hasAccessToken()) {
       alert("로그인이 필요합니다");
       navigate("/login");
       return;
@@ -75,7 +73,6 @@ const ProfileComponent = () => {
     setSaving(true);
     try {
       const res = await updateProfile({
-        user_id: userId,
         user_name: userName.trim(),
         user_email: userEmail.trim(),
         user_birth: birth,
@@ -86,7 +83,6 @@ const ProfileComponent = () => {
       const prev = setUserStore.getState().user || {};
       setUser({
         ...prev,
-        user_id: u.user_id,
         user_name: u.user_name,
         user_email: u.user_email,
       });
@@ -110,7 +106,7 @@ const ProfileComponent = () => {
     );
   }
 
-  if (!getSessionUserId()) {
+  if (!hasAccessToken()) {
     return (
       <div className={style.wrapper}>
         <h1 className={style.title}>프로필 수정</h1>

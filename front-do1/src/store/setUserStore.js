@@ -1,51 +1,59 @@
 import { create } from "zustand";
+import { getProfile } from "../api/user";
 import { useGetMissionStore } from "./useMissionStore";
 import { missionResultStore } from "./missionResultStore";
+import {
+  clearAccessToken,
+  getAccessToken,
+} from "../utils/sessionUser";
+
+export const clearMissionStorage = () => {
+  localStorage.removeItem("missionResult");
+  localStorage.removeItem("missionResultDate");
+  localStorage.removeItem("day");
+  localStorage.removeItem("dayCycleKey");
+  localStorage.removeItem("missionResetAt");
+  localStorage.removeItem("remainingTime");
+  localStorage.removeItem("mission");
+};
 
 export const setUserStore = create((set) => ({
   user: null,
 
   setUser: (user) => {
-    sessionStorage.setItem("user", JSON.stringify(user));
-    sessionStorage.setItem("user_id", user.user_id);
     set({ user });
 
-    // 유저 바뀔 때 해당 유저 데이터 로드
     const { loadUserState } = useGetMissionStore.getState();
     const { loadMissionResult } = missionResultStore.getState();
+
     loadUserState();
     loadMissionResult();
   },
 
-  loadUser: () => {
-    const storeUser = sessionStorage.getItem("user");
-    if (storeUser) {
-      const parsed = JSON.parse(storeUser);
-      set({ user: parsed });
-      if (parsed?.user_id != null) {
-        sessionStorage.setItem("user_id", String(parsed.user_id));
-      }
+  loadUser: async () => {
+    if (!getAccessToken()) {
+      set({ user: null });
+      return;
+    }
+
+    try {
+      const res = await getProfile();
+      set({
+        user: {
+          user_name: res.data.user_name,
+          user_email: res.data.user_email,
+        },
+      });
+    } catch (err) {
+      clearAccessToken();
+      clearMissionStorage();
+      set({ user: null });
     }
   },
 
   logoutUser: () => {
-    // ✅ 로그아웃 시 이전 유저 localStorage 클리어
-    const storeUser = sessionStorage.getItem("user");
-    if (storeUser) {
-      const parsed = JSON.parse(storeUser);
-      const userId = parsed?.user_id;
-      if (userId) {
-        localStorage.removeItem(`missionResult_${userId}`);
-        localStorage.removeItem(`missionResultDate_${userId}`);
-        localStorage.removeItem(`day_${userId}`);
-        localStorage.removeItem(`dayCycleKey_${userId}`);
-        localStorage.removeItem(`missionResetAt_${userId}`);
-        localStorage.removeItem(`remainingTime_${userId}`);
-      }
-    }
-
+    clearAccessToken();
+    clearMissionStorage();
     set({ user: null });
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("user_id");
   },
 }));

@@ -4,6 +4,21 @@ let initPromise;
 
 const ensureIndexes = async () => {
   await pool.query(`
+    ALTER TABLE mission_record
+    DROP CONSTRAINT IF EXISTS mission_record_mission_id_user_id_key
+  `);
+
+  await pool.query(`
+    ALTER TABLE mission_record
+    ADD CONSTRAINT mission_record_user_id_record_date_key
+    UNIQUE (user_id, record_date)
+  `).catch((err) => {
+    if (err.code !== "42710" && err.code !== "42P07") {
+      throw err;
+    }
+  });
+
+  await pool.query(`
     CREATE INDEX IF NOT EXISTS idx_users_email
     ON users(user_email)
   `);

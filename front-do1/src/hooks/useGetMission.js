@@ -1,14 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getMission } from "../api/getMission";
-import { getSessionUserId } from "../utils/sessionUser";
+import { hasAccessToken } from "../utils/sessionUser";
 
 export const useGetMission = () => {
-  const userId = getSessionUserId();
-
   return useQuery({
-    queryKey: ["mission", userId],
+    queryKey: ["mission"],
     queryFn: getMission,
-    enabled: Boolean(userId),
+    enabled: hasAccessToken(),
     staleTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });

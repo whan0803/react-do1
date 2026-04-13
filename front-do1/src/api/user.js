@@ -1,5 +1,8 @@
 // api/user.js
+
+// "https://do1-backend-gbag47575-3813-gyeungwhans-projects.vercel.app/api";
 import axios from "axios";
+import { clearAccessToken, getAccessToken } from "../utils/sessionUser";
 
 const api = axios.create({
   baseURL:
@@ -7,15 +10,36 @@ const api = axios.create({
   timeout: 10000,
 });
 
+api.interceptors.request.use((config) => {
+  const token = getAccessToken();
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401) {
+      clearAccessToken();
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 const warmServerOnce = () => {
   if (typeof window === "undefined") return;
-  if (window.sessionStorage.getItem("api_warmed") === "true") return;
+  if (window.localStorage.getItem("api_warmed") === "true") return;
 
   const runWarmup = () => {
     api
       .get("/health")
       .then(() => {
-        window.sessionStorage.setItem("api_warmed", "true");
+        window.localStorage.setItem("api_warmed", "true");
       })
       .catch(() => {});
   };
@@ -32,7 +56,7 @@ warmServerOnce();
 
 export const signup = (data) => api.post("/signup", data);
 export const login = (data) => api.post("/login", data);
-export const getProfile = (data) => api.post("/me", data);
+export const getProfile = () => api.post("/me");
 export const updateProfile = (data) => api.post("/update", data);
 
 export default api;

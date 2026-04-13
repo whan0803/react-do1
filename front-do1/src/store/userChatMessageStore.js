@@ -8,10 +8,11 @@ export const userChatMessageStore = create((set) => ({
 
   initMessage: () => {
     const user = setUserStore.getState().user;
+    const userName = user?.user_name || "사용자";
 
     set({
       message:[
-        `안녕하세요 ${user?.user_name}님`,
+        `안녕하세요 ${userName}님`,
         "오늘도 같이 미션을 수행해봐요!",
         "저를 클릭하면 오늘의 미션으로 이동합니다",
       ],

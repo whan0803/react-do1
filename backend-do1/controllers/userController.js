@@ -1,5 +1,6 @@
 const pool = require("../db/db");
 const bcrypt = require("bcrypt");
+const { createAccessToken } = require("../utils/jwt");
 
 exports.createUser = async (req, res) => {
   try {
@@ -54,9 +55,14 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: "비밀번호가 일치하지 않습니다" });
     }
 
+    const accessToken = createAccessToken({ userId: user.user_id });
+
     res.json({
-      user_id: user.user_id,
-      user_name: user.user_name,
+      accessToken,
+      user: {
+        user_id: user.user_id,
+        user_name: user.user_name,
+      },
     });
   } catch (err) {
     console.error(err);

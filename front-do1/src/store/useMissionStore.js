@@ -6,11 +6,11 @@ import {
   isResetPassed,
   isLegacyNoonResetAt,
 } from "../utils/missionReset";
-import { getSessionUserId } from "../utils/sessionUser";
+import { hasAccessToken } from "../utils/sessionUser";
 import { getMissionDayCount } from "../api/getMission";
 
-const getStoredDay = (userId) => {
-  const savedDayRaw = localStorage.getItem(`day_${userId}`);
+const getStoredDay = () => {
+  const savedDayRaw = localStorage.getItem("day");
   const savedDay = Number(savedDayRaw);
   return Number.isFinite(savedDay) && savedDay > 0 ? savedDay : null;
 };
@@ -42,9 +42,11 @@ export const useGetMissionStore = create((set) => ({
     set((state) => {
       const next =
         typeof value === "function" ? value(state.nextResetAt) : value;
-      const userId = getSessionUserId();
-      if (userId)
-        localStorage.setItem(`missionResetAt_${userId}`, String(next));
+
+      if (hasAccessToken()) {
+        localStorage.setItem("missionResetAt", String(next));
+      }
+
       return { nextResetAt: Number(next) };
     }),
 
@@ -53,8 +55,11 @@ export const useGetMissionStore = create((set) => ({
     set((state) => {
       const next =
         typeof value === "function" ? value(state.remainingTime) : value;
-      const userId = getSessionUserId();
-      if (userId) localStorage.setItem(`remainingTime_${userId}`, next);
+
+      if (hasAccessToken()) {
+        localStorage.setItem("remainingTime", String(next));
+      }
+
       return { remainingTime: Number(next) };
     }),
 
@@ -62,11 +67,12 @@ export const useGetMissionStore = create((set) => ({
   setDay: (value) =>
     set((state) => {
       const next = typeof value === "function" ? value(state.day) : value;
-      const userId = getSessionUserId();
-      if (userId) {
-        localStorage.setItem(`day_${userId}`, String(next));
-        localStorage.setItem(`dayCycleKey_${userId}`, getMissionCycleKey());
+
+      if (hasAccessToken()) {
+        localStorage.setItem("day", String(next));
+        localStorage.setItem("dayCycleKey", getMissionCycleKey());
       }
+
       return { day: next };
     }),
 
@@ -77,8 +83,16 @@ export const useGetMissionStore = create((set) => ({
   setHashSubmitted: (value) => set({ hashSubmitted: value }),
 
   loadUserState: async () => {
-    const userId = getSessionUserId();
-    if (!userId) return;
+    if (!hasAccessToken()) {
+      const defaultNextResetAt = getNextResetAt();
+      set({
+        nextResetAt: defaultNextResetAt,
+        remainingTime: getRemainingSeconds(defaultNextResetAt),
+        day: 1,
+      });
+      return;
+    }
+
     const currentCycleKey = getMissionCycleKey();
 
     let dbDays = 0;
@@ -86,44 +100,41 @@ export const useGetMissionStore = create((set) => ({
       const data = await getMissionDayCount();
       dbDays = Number(data?.mission_days) || 0;
     } catch (err) {
-      // DB 실패 시에만 로컬 폴백
-      dbDays = getStoredDay(userId) ?? 1;
+      dbDays = getStoredDay() ?? 1;
       console.log(err);
     }
 
-    const savedDay = getStoredDay(userId);
-    const savedCycleKey = localStorage.getItem(`dayCycleKey_${userId}`);
+    const savedDay = getStoredDay();
+    const savedCycleKey = localStorage.getItem("dayCycleKey");
     const progressedDay =
       savedDay == null ? 0 : savedDay + getDayDiff(savedCycleKey, currentCycleKey);
 
-    // DB 완료 일수와 현재 미션 사이클 경과분을 함께 반영
     const day = Math.max(dbDays, progressedDay, 1);
-    localStorage.setItem(`day_${userId}`, String(day));
-    localStorage.setItem(`dayCycleKey_${userId}`, currentCycleKey);
+    localStorage.setItem("day", String(day));
+    localStorage.setItem("dayCycleKey", currentCycleKey);
 
-    const savedResetAt = Number(
-      localStorage.getItem(`missionResetAt_${userId}`),
-    );
+    const savedResetAt = Number(localStorage.getItem("missionResetAt"));
     const nextResetAt =
       isResetPassed(savedResetAt) || isLegacyNoonResetAt(savedResetAt)
         ? getNextResetAt()
         : savedResetAt;
     const remainingTime = getRemainingSeconds(nextResetAt);
 
-    localStorage.setItem(`missionResetAt_${userId}`, String(nextResetAt));
-    localStorage.setItem(`remainingTime_${userId}`, String(remainingTime));
+    localStorage.setItem("missionResetAt", String(nextResetAt));
+    localStorage.setItem("remainingTime", String(remainingTime));
 
     set({ nextResetAt, remainingTime, day });
   },
 
   resetTimer: () => {
-    const userId = getSessionUserId();
     const nextResetAt = getNextResetAt();
     const time = getRemainingSeconds(nextResetAt);
-    if (userId) {
-      localStorage.setItem(`missionResetAt_${userId}`, String(nextResetAt));
-      localStorage.setItem(`remainingTime_${userId}`, String(time));
+
+    if (hasAccessToken()) {
+      localStorage.setItem("missionResetAt", String(nextResetAt));
+      localStorage.setItem("remainingTime", String(time));
     }
+
     set({
       nextResetAt,
       remainingTime: time,
